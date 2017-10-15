@@ -4,7 +4,7 @@ Email:  filip.carl.johansson@gmail.com
 Github: http://github.com/fippli
 
 Description:
-Add article entry to the database.
+Update article in the database.
 
 */
 
