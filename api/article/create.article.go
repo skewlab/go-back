@@ -19,15 +19,6 @@ import (
 	"../../database"
 )
 
-/*
-	Article struct
-	==============
-	id, title, html, created, updated
-	NOTE:
-	The ints for created and updated might need to change since
-	it the type in the database is bigint. The data types need to match
-*/
-
 type NewArticle struct {
 	Title string `json: "title"`
 	Html string `json: "html"`

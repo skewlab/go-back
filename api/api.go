@@ -21,10 +21,10 @@ func Module() {
 	http.HandleFunc( "/api/test", test )
 
 	/* Article */
-	http.HandleFunc( "/api/article/create", article.Create )	// Create
+	http.HandleFunc( "/api/article/create", article.Create )	// Create article
 	http.HandleFunc( "/api/article/get", article.GetAll )			// Get all articles
-	// TODO: Update article
-	// TODO: Remove article
+	http.HandleFunc( "/api/article/update", article.Update )	// Update article
+	http.HandleFunc( "/api/article/remove", article.Remove )	// Remove article
 
 	/* User */
 	http.HandleFunc( "/api/user/add", user.Add ) 							// Add user
