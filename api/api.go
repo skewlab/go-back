@@ -24,7 +24,6 @@ func Module() {
 	http.HandleFunc( "/api/article/create", article.Create )	// Create article
 	http.HandleFunc( "/api/article/get", article.GetAll )			// Get all articles
 	http.HandleFunc( "/api/article/update", article.Update )	// Update article
-	// TODO: Remove article
 	http.HandleFunc( "/api/article/remove", article.Remove )	// Remove article
 
 	/* User */
