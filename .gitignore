@@ -1,0 +1,6 @@
+# MAC Specific
+.DS_Store
+
+# Config
+config.json
+db.config.json
