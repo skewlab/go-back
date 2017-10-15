@@ -5,7 +5,7 @@ A general purpose backend in GO
 
 ### Database
 ** Make sure you have PostgreSQL installed on your computer.**
-1. Create database in postrgesql and choose a <dbname>, <username>, <password>.
+1. Create database in postrgesql and choose a \<dbname\>, \<username\>, \<password\>.
 2. Duplicate example.db.config.json in **database** folder
 3. Rename the copy to db.config.json
 4. Change the fields to match your setup:
