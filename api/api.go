@@ -31,6 +31,8 @@ func Module() {
 	// TODO: Update user password
 	// TODO: Remove user
 
+	/* Authentication */
+	http.HandleFunc( "/api/signin", user.Login )
 	/* Page */
 	// TODO: Get page content, (articles)
 
