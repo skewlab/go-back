@@ -14,7 +14,7 @@ A general purpose backend in GO
   "host"     : "localhost",
   "port"     : 5432,
   "user"     : "<username>",
-  "password" : "<passeord>",
+  "password" : "<password>",
   "dbname"   : "<dbname>"
 }
 ```
