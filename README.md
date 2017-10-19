@@ -38,12 +38,12 @@ If you are using the contact module, you will need to configure contact.config.j
 5. Change <forward email> to the email you wish to send the contents of the form to.
 ```
 {
- "SMTP": {
+  "SMTP": {
 	"host": "smtp.gmail.com",
 	"port": ":587"
- },
- "gmail": "<gmail>",
- "password": "<password>",
- "forward": "<forward email>"
+  },
+  "gmail": "<gmail>",
+  "password": "<password>",
+  "forward": "<forward email>"
 }
 ```
