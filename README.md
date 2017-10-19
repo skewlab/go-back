@@ -39,8 +39,8 @@ If you are using the contact module, you will need to configure contact.config.j
 ```
 {
   "SMTP": {
-	"host": "smtp.gmail.com",
-	"port": ":587"
+    "host": "smtp.gmail.com",
+    "port": ":587"
   },
   "gmail": "<gmail>",
   "password": "<password>",
