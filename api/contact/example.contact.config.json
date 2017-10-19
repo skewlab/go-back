@@ -1,0 +1,9 @@
+{
+	"SMTP": {
+		"host": "smtp.gmail.com",
+		"port": ":587"
+	},
+	"gmail": "<gmail>",
+	"password": "<password>",
+	"forward": "<forward email>"
+}

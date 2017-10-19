@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"./article"
 	"./user"
+	"./contact"
 )
 
 func Module() {
@@ -35,6 +36,9 @@ func Module() {
 	http.HandleFunc( "/api/signin", user.Login )
 	/* Page */
 	// TODO: Get page content, (articles)
+
+	/* Contact */
+	http.HandleFunc( "/api/contact", contact.Send )
 
 	/* Files */
 
