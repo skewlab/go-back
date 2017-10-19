@@ -1,0 +1,4 @@
+{
+	"SMTP": "smtp.example.com:<portnumber>",
+	"recipient": "mail@example.com"
+}
