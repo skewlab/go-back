@@ -29,3 +29,21 @@ A general purpose backend in GO
   "port" : ":0000"
 }
 ```
+### Contact
+If you are using the contact module, you will need to configure contact.config.json.
+1. Duplicate example.contact.config.json
+2. Rename the copy to contact.config.json
+3. Change <gmail> to your gmail address (This would preferrably be another than your regular)
+4. Change <password> to the password for the given gmail account.
+5. Change <forward email> to the email you wish to send the contents of the form to.
+```
+{
+	"SMTP": {
+		"host": "smtp.gmail.com",
+		"port": ":587"
+	},
+	"gmail": "<gmail>",
+	"password": "<password>",
+	"forward": "<forward email>"
+}
+```
