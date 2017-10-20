@@ -95,7 +95,24 @@ CREATE TABLE UserAvatar (
 
 --
 -- Comments:
--- 
+--
+--
+
+-- --------------------------------------------------------
+
+--
+-- User description
+--
+
+CREATE TABLE Description (
+	USERID uuid,
+	DESCRIPTION text,
+	PUBLIC boolean
+);
+
+--
+-- Comments:
+--
 --
 
 -- --------------------------------------------------------

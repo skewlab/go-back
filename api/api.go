@@ -29,12 +29,16 @@ func Module() {
 	/* User */
 	http.HandleFunc( "/api/user/add", user.Add ) 							// Add user
 	// TODO: Update user password
+	// NOTE: Trying to update any
+	http.HandleFunc( "/api/user/update", user.Update )				// Update user profile
 	// TODO: Remove user
 
 	/* Authentication */
 	http.HandleFunc( "/api/signin", user.Login )
+
 	/* Page */
 	// TODO: Get page content, (articles)
+	// NOTE: This should be the content for the specified page.
 
 	/* Files */
 
