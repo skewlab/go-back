@@ -25,6 +25,8 @@ type Article struct {
 
 func GetAll( w http.ResponseWriter, r *http.Request ) {
 
+	fmt.Println( "accessing articles" )
+
 	var query string = "SELECT * FROM Article"
 
 	rows, err := database.Connection().Query( query )

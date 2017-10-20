@@ -1,11 +1,11 @@
 /*
 
 Description:
-User login endpoint
+User signin endpoint
 */
 
 
-package user
+package signin
 
 import (
 	"fmt"
@@ -21,7 +21,7 @@ type UserCredentials struct {
 	Password string `json: "password"`
 }
 
-func Login( w http.ResponseWriter, r *http.Request ) {
+func Signin( w http.ResponseWriter, r *http.Request ) {
 
 	var userCredentials UserCredentials
 	var username string

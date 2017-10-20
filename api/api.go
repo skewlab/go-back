@@ -9,41 +9,33 @@ Include all the api endpoints.
 package api
 
 import (
-	"fmt"
-	"net/http"
-	"./article"
+	// "fmt"
+	// "net/http"
+	//"github.com/gorilla/mux"
+	"github.com/labstack/echo"
+	// "./article"
 	"./user"
+	// "./signin"
 )
 
-func Module() {
+func Module( e *echo.Echo ) {
 
-	/* Test */
-	http.HandleFunc( "/api/test", test )
+	// Create a new instance of Echo
+	// e := echo.New()
+	//fmt.Printf( e )
 
-	/* Article */
-	http.HandleFunc( "/api/article/create", article.Create )	// Create article
-	http.HandleFunc( "/api/article/get", article.GetAll )			// Get all articles
-	http.HandleFunc( "/api/article/update", article.Update )	// Update article
-	http.HandleFunc( "/api/article/remove", article.Remove )	// Remove article
+	// Create all routes
 
-	/* User */
-	http.HandleFunc( "/api/user/add", user.Add ) 							// Add user
-	// TODO: Update user password
-	// NOTE: Trying to update any
-	http.HandleFunc( "/api/user/update", user.Update )				// Update user profile
-	// TODO: Remove user
+	// Static routes for main page and manage page
+	e.File("/", "static/index.html")
 
-	/* Authentication */
-	http.HandleFunc( "/api/signin", user.Login )
+	// Users
+	e.GET("/api/user/:id", user.Get() )
+	e.POST("/api/user", user.Post() )
+	e.PUT("/api/user", user.Put() )
+	e.DELETE("/api/user/:id", user.Delete() )
 
-	/* Page */
-	// TODO: Get page content, (articles)
-	// NOTE: This should be the content for the specified page.
+	// Start as a web server
 
-	/* Files */
 
-}
-
-func test( w http.ResponseWriter, r *http.Request ) {
-	fmt.Println( "Test works" )
 }

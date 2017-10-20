@@ -4,6 +4,11 @@
 -- Description:
 --
 
+-- Remove old data: (This should only be used in development mode)
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO public;
 
 CREATE EXTENSION pgcrypto;
 
@@ -13,12 +18,16 @@ CREATE EXTENSION pgcrypto;
 -- Table structure for table users
 --
 
-DROP TABLE Users;
-
 CREATE TABLE Users (
-  ID uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
-  EMAIL text NOT NULL,
-  PASSWORD text NOT NULL
+	ID uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+	EMAIL text NOT NULL,
+	PASSWORD text NOT NULL,
+	ALIAS text,
+	BIRTHDATE timestamp,
+	AVATAR text,
+	DESCRIPTION text,
+	WEBSITE text,
+	PHONENUMBER varchar(255)
 );
 
 --
@@ -32,96 +41,8 @@ CREATE TABLE Users (
 -- --------------------------------------------------------
 
 --
--- User profile first name
---
-
-CREATE TABLE Alias (
-	USERID uuid,
-	ALIAS varchar(255),
-	PUBLIC boolean
-);
-
---
--- Comments:
---
---
-
--- --------------------------------------------------------
-
---
--- User profile email
---
-
-CREATE TABLE Email (
-	USERID uuid,
-	EMAIL varchar(255),
-	PUBLIC boolean
-);
-
---
--- Comments:
--- These are optional additional email
--- Primary email is connected to the user in users table
---
-
--- --------------------------------------------------------
-
---
--- User profile birth date
---
-
-CREATE TABLE UserBirthdate (
-	USERID uuid,
-	BIRTHDATE timestamp,
-	PUBLIC boolean
-);
-
---
--- Comments:
--- Optional
---
-
--- --------------------------------------------------------
-
---
--- User profile picture
---
-
-CREATE TABLE UserAvatar (
-	USERID uuid,
-	IMGPATH text,
-	PUBLIC boolean
-);
-
---
--- Comments:
---
---
-
--- --------------------------------------------------------
-
---
--- User description
---
-
-CREATE TABLE Description (
-	USERID uuid,
-	DESCRIPTION text,
-	PUBLIC boolean
-);
-
---
--- Comments:
---
---
-
--- --------------------------------------------------------
-
---
 -- Table structure for table article
 --
-
-DROP TABLE Article;
 
 CREATE TABLE Article (
   ID SERIAL,
