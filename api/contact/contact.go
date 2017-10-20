@@ -10,7 +10,6 @@ Edit contact.config.json to add your credentials.
 package contact
 
 import (
-	"fmt"
 	"log"
 	"net/smtp"
 	"encoding/json"
@@ -47,7 +46,6 @@ func Send( w http.ResponseWriter, r *http.Request ) {
 	var email Email
 	err = json.NewDecoder( r.Body ).Decode( &email )
 	if err != nil { panic( err ) }
-	fmt.Printf("POST: %v", email)
 
 	messageBody := BuildMessage( email )
 
