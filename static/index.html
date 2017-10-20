@@ -16,6 +16,13 @@
 			p {
 				font-size: 1.5em;
 			}
+			form {
+				width: 30%;
+			}
+			input, textarea {
+				width: 100%;
+				box-sizing: border-box;
+			}
 		</style>
 
 		<h1>GO backend!</h1>
@@ -27,6 +34,44 @@
 			Best regards<br>
 			Skewlab team
 		</p>
+
+		<h2>Contact</h2>
+		<p>Example of contact form read more at our wiki at <a href="https://github.com/skewlab/go-back/wiki/Contact-module" target="_blank">github</a>.</p>
+
+		<script>
+			let sendMail = (function() {
+
+				let xmlhttp = new XMLHttpRequest(); // new HttpRequest instance
+				xmlhttp.open( "POST", "/api/contact" );
+				xmlhttp.setRequestHeader( "Content-Type", "application/json" );
+
+				return function () {
+					let data = {
+						from:    document.getElementById( "from" ).value,
+						name:    document.getElementById( "name" ).value,
+						subject: document.getElementById( "subject" ).value,
+						body:    document.getElementById( "body" ).value
+					}
+					xmlhttp.send( JSON.stringify( data ) );
+				}
+
+			})();
+		</script>
+
+		<form action="javascript:sendMail()" >
+		  <label for="from">Email:</label>
+		  <input id="from" type="text" name="from" >
+
+		  <label for="name">Name:</label>
+		  <input id="name" type="text" name="name" >
+
+		  <label for="subject">Subject:</label>
+		  <input id="subject" type="text" name="subject" >
+
+		  <label for="body">Message:</label>
+		  <textarea id="body" name="body"></textarea>
+		  <button type="submit">Send</button>
+		</form>
 	</body>
 
 </html>
