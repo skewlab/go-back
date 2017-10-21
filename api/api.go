@@ -9,22 +9,13 @@ Include all the api endpoints.
 package api
 
 import (
-	// "fmt"
-	// "net/http"
-	//"github.com/gorilla/mux"
 	"github.com/labstack/echo"
-	// "./article"
+	"./article"
 	"./user"
 	// "./signin"
 )
 
 func Module( e *echo.Echo ) {
-
-	// Create a new instance of Echo
-	// e := echo.New()
-	//fmt.Printf( e )
-
-	// Create all routes
 
 	// Static routes for main page and manage page
 	e.File("/", "static/index.html")
@@ -35,7 +26,10 @@ func Module( e *echo.Echo ) {
 	e.PUT("/api/user", user.Put() )
 	e.DELETE("/api/user/:id", user.Delete() )
 
-	// Start as a web server
-
+	// Articles
+	e.GET("/api/article/:id", article.Get() )
+	e.POST("/api/article", article.Post() )
+	e.PUT("/api/article", article.Put() )
+	e.DELETE("/api/article/:id", article.Delete() )
 
 }

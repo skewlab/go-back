@@ -5,7 +5,7 @@ Description:
 Delete user with delete request via /api/user
 */
 
-package user
+package article
 
 import (
 	"net/http"
@@ -15,19 +15,18 @@ import (
 
 func Delete() echo.HandlerFunc {
 
+	const (
+		query string = `DELETE FROM Article WHERE id = $1`
+	)
+
 	return func( c echo.Context ) error {
 
 		id := c.Param( "id" )
-
-		var query string = `
-			DELETE FROM Users WHERE id = $1
-		`
-
 		_, err := database.Connection().Query( query, id )
 
 		if err != nil { return err }
 
-		return c.JSON( http.StatusCreated, H{ "message": "User deleted" } )
+		return c.JSON( http.StatusCreated, H{ "message": "Article deleted" } )
 	}
 
 }

@@ -50,9 +50,9 @@ func Get() echo.HandlerFunc {
 			fmt.Printf( "\n > %v", user.Id )
 		}
 
-		data := H{ "id":&user.Id, "email":&user.Email, "alias":&user.Alias, "birthdate":&user.Birthdate, "avatar":&user.Avatar, "description":&user.Description, "website":&user.Website, "phonenumber":&user.Phonenumber }
+		// data := H{ "id":&user.Id, "email":&user.Email, "alias":&user.Alias, "birthdate":&user.Birthdate, "avatar":&user.Avatar, "description":&user.Description, "website":&user.Website, "phonenumber":&user.Phonenumber }
 
-		return c.JSON( http.StatusCreated, data )
+		return c.JSON( http.StatusCreated, user )
 	}
 
 }
