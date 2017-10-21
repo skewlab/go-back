@@ -20,13 +20,13 @@ type H map[string]interface{}
 
 type User struct {
 	Id 					string				 `json:"id"`
-	Email 			string 				 `json:"id"`
-	Alias 			sql.NullString `json:"id"`
-	Birthdate 	sql.NullString `json:"id"`
-	Avatar 			sql.NullString `json:"id"`
-	Description sql.NullString `json:"id"`
-	Website 		sql.NullString `json:"id"`
-	Phonenumber sql.NullString `json:"id"`
+	Email 			string 				 `json:"email"`
+	Alias 			sql.NullString `json:"alias"`
+	Birthdate 	sql.NullString `json:"birthdate"`
+	Avatar 			sql.NullString `json:"avatar"`
+	Description sql.NullString `json:"description"`
+	Website 		sql.NullString `json:"website"`
+	Phonenumber sql.NullString `json:"phonenumber"`
 }
 
 func Get() echo.HandlerFunc {

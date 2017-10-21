@@ -12,7 +12,7 @@ import (
 	"github.com/labstack/echo"
 	"./article"
 	"./user"
-	// "./signin"
+	"./signin"
 )
 
 func Module( e *echo.Echo ) {
@@ -31,5 +31,8 @@ func Module( e *echo.Echo ) {
 	e.POST("/api/article", article.Post() )
 	e.PUT("/api/article", article.Put() )
 	e.DELETE("/api/article/:id", article.Delete() )
+
+	// Signin
+	e.POST("/api/signin", signin.Post() )
 
 }
