@@ -42,7 +42,7 @@ func Post() echo.HandlerFunc {
 
 		switch {
 		case err == sql.ErrNoRows:
-					return c.JSON( http.StatusCreated, H{"message":"No such user"} )
+					return c.JSON( http.StatusCreated, H{ "message":"No such user" } )
 
 			case err != nil:
 					return err
