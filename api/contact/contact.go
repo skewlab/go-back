@@ -29,9 +29,9 @@ type ContactConfig struct {
 
 type Email struct {
 	From string
+	Name string
 	Subject string
 	Body string
-	Name string
 }
 
 func Send( w http.ResponseWriter, r *http.Request ) {
