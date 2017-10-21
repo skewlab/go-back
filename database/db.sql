@@ -54,7 +54,28 @@ CREATE TABLE Article (
 
 --
 -- Comments:
---
+-- Used for page content
+-- Different from post wich has a user
 --
 
 -- --------------------------------------------------------
+
+--
+-- Table structure for table posts
+--
+
+CREATE TABLE Posts (
+	ID SERIAL,
+	USERID uuid,
+	CONTENT text,
+	DATE_CREATED timestamp,
+	DATE_UPDATED timestamp,
+	UPS int
+);
+
+--
+-- Comments:
+--
+--
+
+-- ---------------------------------------------------------

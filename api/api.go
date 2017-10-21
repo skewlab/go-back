@@ -13,6 +13,7 @@ import (
 	"./article"
 	"./user"
 	"./signin"
+	"./posts"
 )
 
 func Module( e *echo.Echo ) {
@@ -31,6 +32,12 @@ func Module( e *echo.Echo ) {
 	e.POST("/api/article", article.Post() )
 	e.PUT("/api/article", article.Put() )
 	e.DELETE("/api/article/:id", article.Delete() )
+
+	// Posts
+	e.GET("/api/posts/:id", posts.Get() )
+	e.POST("/api/posts", posts.Post() )
+	e.PUT("/api/posts", posts.Put() )
+	e.DELETE("/api/posts/:id", posts.Delete() )
 
 	// Signin
 	e.POST("/api/signin", signin.Post() )
