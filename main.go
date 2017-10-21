@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"net/http"
+	// "net/http"
 	"encoding/json"
+	"github.com/labstack/echo"
 	"./api"
 	"./util"
 )
@@ -24,11 +25,12 @@ func main() {
 
 	fmt.Printf( "\n > Starting server on localhost%v\n", config.Port )
 
-	fs := http.FileServer( http.Dir( "static" ) )
-	http.Handle( "/", fs )
+	// fs := http.FileServer( http.Dir( "static" ) )
+	// http.Handle( "/", fs )
+	e := echo.New()
+	api.Module( e )
 
-	api.Module()
-
-	http.ListenAndServe( config.Port, nil )
+	// http.ListenAndServe( config.Port, nil )
+	e.Start(":8000")
 
 }

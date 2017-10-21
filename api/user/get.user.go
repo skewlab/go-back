@@ -1,11 +1,58 @@
 /*
+Author: Filip Johansson
 
 Description:
-
+Get user
+RETURN: <json>
 */
 
 package user
 
-import ()
+import (
+	"fmt"
+	"net/http"
+	"database/sql"
+	"../../database"
+	"github.com/labstack/echo"
+)
 
-func Get() {}
+type H map[string]interface{}
+
+type User struct {
+	Id 					string				 `json:"id"`
+	Email 			string 				 `json:"email"`
+	Alias 			sql.NullString `json:"alias"`
+	Birthdate 	sql.NullString `json:"birthdate"`
+	Avatar 			sql.NullString `json:"avatar"`
+	Description sql.NullString `json:"description"`
+	Website 		sql.NullString `json:"website"`
+	Phonenumber sql.NullString `json:"phonenumber"`
+}
+
+func Get() echo.HandlerFunc {
+
+	return func ( c echo.Context ) error {
+
+		var user User
+
+		userId := c.Param( "id" )
+
+		var query string = `
+			SELECT id, email, alias, birthdate, avatar, description, website, phonenumber
+			FROM Users
+			WHERE id = $1
+		`
+		rows, err := database.Connection().Query( query, userId )
+
+		for rows.Next() {
+			err = rows.Scan( &user.Id, &user.Email, &user.Alias, &user.Birthdate, &user.Avatar, &user.Description, &user.Website, &user.Phonenumber )
+			if err != nil { return err }
+			fmt.Printf( "\n > %v", user.Id )
+		}
+
+		// data := H{ "id":&user.Id, "email":&user.Email, "alias":&user.Alias, "birthdate":&user.Birthdate, "avatar":&user.Avatar, "description":&user.Description, "website":&user.Website, "phonenumber":&user.Phonenumber }
+
+		return c.JSON( http.StatusCreated, user )
+	}
+
+}

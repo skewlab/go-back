@@ -9,41 +9,30 @@ Include all the api endpoints.
 package api
 
 import (
-	"fmt"
-	"net/http"
+	"github.com/labstack/echo"
 	"./article"
 	"./user"
-	"./contact"
+	"./signin"
 )
 
-func Module() {
+func Module( e *echo.Echo ) {
 
-	/* Test */
-	http.HandleFunc( "/api/test", test )
+	// Static routes for main page and manage page
+	e.File("/", "static/index.html")
 
-	/* Article */
-	http.HandleFunc( "/api/article/create", article.Create )	// Create article
-	http.HandleFunc( "/api/article/get", article.GetAll )			// Get all articles
-	http.HandleFunc( "/api/article/update", article.Update )	// Update article
-	http.HandleFunc( "/api/article/remove", article.Remove )	// Remove article
+	// Users
+	e.GET("/api/user/:id", user.Get() )
+	e.POST("/api/user", user.Post() )
+	e.PUT("/api/user", user.Put() )
+	e.DELETE("/api/user/:id", user.Delete() )
 
-	/* User */
-	http.HandleFunc( "/api/user/add", user.Add ) 							// Add user
-	// TODO: Update user password
-	// TODO: Remove user
+	// Articles
+	e.GET("/api/article/:id", article.Get() )
+	e.POST("/api/article", article.Post() )
+	e.PUT("/api/article", article.Put() )
+	e.DELETE("/api/article/:id", article.Delete() )
 
-	/* Authentication */
-	http.HandleFunc( "/api/signin", user.Login )
-	/* Page */
-	// TODO: Get page content, (articles)
+	// Signin
+	e.POST("/api/signin", signin.Post() )
 
-	/* Contact */
-	http.HandleFunc( "/api/contact", contact.Send )
-
-	/* Files */
-
-}
-
-func test( w http.ResponseWriter, r *http.Request ) {
-	fmt.Println( "Test works" )
 }
