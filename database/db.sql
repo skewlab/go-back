@@ -78,4 +78,21 @@ CREATE TABLE Posts (
 --
 --
 
--- ---------------------------------------------------------
+-- --------------------------------------------------------
+
+--
+-- Table structure for table contacts
+--
+
+CREATE TABLE UserConnections (
+	A uuid,
+	B uuid,
+	Accepted boolean
+);
+
+--
+-- Comments:
+-- A reaches out to B. If b Accepts the accepted field is set to true.
+--  If relation is terminated the row is removed from the database.
+
+-- --------------------------------------------------------
