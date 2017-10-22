@@ -6,10 +6,9 @@ Get user
 RETURN: <json>
 */
 
-package user
+package users
 
 import (
-	"fmt"
 	"net/http"
 	"database/sql"
 	"../../database"
@@ -31,26 +30,37 @@ type User struct {
 
 func Get() echo.HandlerFunc {
 
-	return func ( c echo.Context ) error {
-
-		var user User
-
-		userId := c.Param( "id" )
-
-		var query string = `
+	const (
+		query string = `
 			SELECT id, email, alias, birthdate, avatar, description, website, phonenumber
 			FROM Users
 			WHERE id = $1
 		`
+	)
+
+	var user User
+
+	return func ( c echo.Context ) error {
+
+		userId := c.Param( "id" )
+
 		rows, err := database.Connection().Query( query, userId )
 
 		for rows.Next() {
-			err = rows.Scan( &user.Id, &user.Email, &user.Alias, &user.Birthdate, &user.Avatar, &user.Description, &user.Website, &user.Phonenumber )
-			if err != nil { return err }
-			fmt.Printf( "\n > %v", user.Id )
-		}
 
-		// data := H{ "id":&user.Id, "email":&user.Email, "alias":&user.Alias, "birthdate":&user.Birthdate, "avatar":&user.Avatar, "description":&user.Description, "website":&user.Website, "phonenumber":&user.Phonenumber }
+			err = rows.Scan(
+				&user.Id,
+				&user.Email,
+				&user.Alias,
+				&user.Birthdate,
+				&user.Avatar,
+				&user.Description,
+				&user.Website,
+				&user.Phonenumber )
+
+			if err != nil { return err }
+
+		}
 
 		return c.JSON( http.StatusCreated, user )
 	}

@@ -34,6 +34,9 @@ func main() {
 		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
 	}))
 
+	// Static routes for main page and manage page
+	e.File("/", "static/index.html")
+
 	api.Module( e )
 
 	e.Start( config.Port )
