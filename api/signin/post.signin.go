@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"database/sql"
 	"../../database"
+	"fmt"
 )
 
 type H map[string]interface{}
@@ -39,7 +40,7 @@ func Post() echo.HandlerFunc {
 		c.Bind( &userCredentials )
 
 		err := database.Connection().QueryRow( query, userCredentials.Email, userCredentials.Password).Scan( &id, &email )
-
+		fmt.Println(userCredentials)
 		switch {
 		case err == sql.ErrNoRows:
 					return c.JSON( http.StatusCreated, H{ "message":"No such user" } )

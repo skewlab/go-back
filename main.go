@@ -14,6 +14,7 @@ import (
 */
 type Config struct {
 	Port string
+	DevPort string
 }
 
 func main() {
@@ -29,10 +30,9 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"localhost", "https://localhost:*", "127.0.0.1"},
+		AllowOrigins: []string{"localhost", "http://localhost"+config.DevPort, "127.0.0.1"},
 		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
 	}))
-	///////////////
 
 	api.Module( e )
 
