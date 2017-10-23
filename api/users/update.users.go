@@ -9,6 +9,7 @@ Update the fields of the user profile.
 package users
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 	"github.com/labstack/echo"
@@ -16,14 +17,14 @@ import (
 )
 
 type UserProfile struct {
-	Id 					string
-	Email 			string
-	Alias 			string
-	Avatar 			string
-	Birthdate 	time.Time
-	Description string
-	Website 		string
-	Phonenumber string
+	Id 					string		`json:"id"`
+	Email 			string		`json:"email"`
+	Alias 			string		`json:"alias"`
+	Avatar 			string		`json:"avatar"`
+	Birthdate 	string		`json:"birthdate"`
+	Description string		`json:"description"`
+	Website 		string		`json:"website"`
+	Phonenumber string		`json:"phonenumber"`
 }
 
 /*
@@ -56,13 +57,20 @@ func Update() echo.HandlerFunc {
 	var userProfile UserProfile
 
 	return func( c echo.Context ) error {
+
 		c.Bind( &userProfile )
+
+		birthdate, err := time.Parse( userProfile.Birthdate, userProfile.Birthdate )
+
+		if err != nil { return err }
+
+		fmt.Printf( "%v", userProfile )
 
 		_, updateErr := database.Connection().Query(
 			updateQuery,
 			userProfile.Email,
 			userProfile.Alias,
-			userProfile.Birthdate,
+			birthdate,
 			userProfile.Avatar,
 			userProfile.Description,
 			userProfile.Website,
@@ -75,7 +83,7 @@ func Update() echo.HandlerFunc {
 			insertQuery,
 			userProfile.Email,
 			userProfile.Alias,
-			userProfile.Birthdate,
+			birthdate,
 			userProfile.Avatar,
 			userProfile.Description,
 			userProfile.Website,
