@@ -28,8 +28,8 @@ func Accept() echo.HandlerFunc {
 			UPDATE connectionRequests
 			SET
 				Accepted = true
-			WHERE A = $1
-			AND   B = $2
+			WHERE RequestingUser = $1
+			AND   RespondingUser = $2
 		`
 	)
 

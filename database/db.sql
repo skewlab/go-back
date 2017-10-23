@@ -69,8 +69,7 @@ CREATE TABLE Posts (
 	USERID uuid,
 	CONTENT text,
 	DATE_CREATED timestamp,
-	DATE_UPDATED timestamp,
-	UPS int
+	DATE_UPDATED timestamp
 );
 
 --
@@ -85,8 +84,8 @@ CREATE TABLE Posts (
 --
 
 CREATE TABLE UserConnections (
-	A uuid,
-	B uuid,
+	RequestingUser uuid,
+	RespondingUser uuid,
 	Accepted boolean
 );
 
@@ -103,15 +102,11 @@ CREATE TABLE UserConnections (
 
 CREATE TABLE Ups (
 	Userid uuid,
-	Type varchar(255),
-	Contentid int
+	Postid int
 );
 
 --
 -- Comments:
--- User id of the user that likes something
--- Type is what type of thing that is liked e.g. 'post' or 'article'
--- Contentid is the id of the Contentid e.g. id of post
 --
 
 -- --------------------------------------------------------

@@ -15,6 +15,7 @@ import (
 	"./user-connections"
 	"./signin"
 	"./posts"
+	"./ups"
 )
 
 func Module( e *echo.Echo ) {
@@ -62,5 +63,11 @@ func Module( e *echo.Echo ) {
 	// Signin
 	//
 	e.POST("/api/signin", signin.Post() )
+
+	//
+	// Ups
+	//
+	e.GET("/api/ups/user/:id", ups.Get() ) // Get a users ups
+	e.DELETE("/api/ups/:id", ups.Delete() ) // Get a posts ups
 
 }

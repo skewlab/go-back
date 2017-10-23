@@ -17,18 +17,23 @@ import (
 type H map[string]interface{}
 
 type UserPost struct {
-	Id 						int 			`json: "id"`
-	Userid 				string 		`json: "userid"`
-	Content 			string 		`json: "content"`
-	Date_created 	time.Time `json: "date_created"`
-	Date_updated 	time.Time `json: "date_updated"`
-	Ups 					int				`json:"ups"`
+	Id 						int 			`json:"id"`
+	Userid 				string 		`json:"userid"`
+	Content 			string 		`json:"content"`
+	Date_created 	time.Time `json:"date_created"`
+	Date_updated 	time.Time `json:"date_updated"`
 }
 
 func Get() echo.HandlerFunc {
 
 	var userPost UserPost
 	var query string
+
+	const(
+		allQuery string = `SELECT * FROM Posts` // Also count all ups
+		countQuery string = ``
+		oneQuery string = ``
+	)
 
 	return func( c echo.Context ) error {
 
@@ -37,10 +42,9 @@ func Get() echo.HandlerFunc {
 		if id  == "all" {
 			var userPosts []UserPost
 			// TODO: Only posts from the user and its friends should be available.
-			query = `SELECT * FROM Posts`
-			rows, err := database.Connection().Query( query )
+			rows, err = database.Connection().Query( allQuery )
 			for rows.Next() {
-				err = rows.Scan( &userPost.Id, &userPost.Userid, &userPost.Content, &userPost.Date_created, &userPost.Date_updated, &userPost.Ups )
+				err = rows.Scan( &userPost.Id, &userPost.Userid, &userPost.Content, &userPost.Date_created, &userPost.Date_updated )
 				if err != nil { return err }
 				userPosts = append( userPosts, userPost )
 			}
@@ -48,10 +52,16 @@ func Get() echo.HandlerFunc {
 			return c.JSON( http.StatusCreated, userPosts )
 		}
 
+		/*
+		TODO:
+		Update posts to count its ups.
+		SELECT COUNT(*) FROM Ups WHERE postid = $1
+		Store count in &userPost.Ups
+		*/
 		query = `SELECT * FROM Posts WHERE id = $1`
 		rows, err := database.Connection().Query( query, id )
 		for rows.Next() {
-			err = rows.Scan( &userPost.Id, &userPost.Userid, &userPost.Content, &userPost.Date_created, &userPost.Date_updated, &userPost.Ups )
+			err = rows.Scan( &userPost.Id, &userPost.Userid, &userPost.Content, &userPost.Date_created, &userPost.Date_updated )
 			if err != nil { return err }
 		}
 
