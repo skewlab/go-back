@@ -96,3 +96,22 @@ CREATE TABLE UserConnections (
 --  If relation is terminated the row is removed from the database.
 
 -- --------------------------------------------------------
+
+--
+-- Table structure for table contacts
+--
+
+CREATE TABLE Ups (
+	Userid uuid,
+	Type varchar(255),
+	Contentid int
+);
+
+--
+-- Comments:
+-- User id of the user that likes something
+-- Type is what type of thing that is liked e.g. 'post' or 'article'
+-- Contentid is the id of the Contentid e.g. id of post
+--
+
+-- --------------------------------------------------------
