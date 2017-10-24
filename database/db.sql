@@ -46,10 +46,10 @@ CREATE TABLE Users (
 
 CREATE TABLE Article (
   ID SERIAL,
-  TITLE varchar(255),
-  HTML text,
-  DATE_CREATED timestamp,
-  DATE_UPDATED timestamp
+  TITLE varchar(255) NOT NULL,
+  HTML text NOT NULL,
+  DATE_CREATED timestamp NOT NULL,
+  DATE_UPDATED timestamp NOT NULL
 );
 
 --
@@ -66,10 +66,10 @@ CREATE TABLE Article (
 
 CREATE TABLE Posts (
 	ID SERIAL,
-	USERID uuid,
-	CONTENT text,
-	DATE_CREATED timestamp,
-	DATE_UPDATED timestamp
+	USERID uuid NOT NULL,
+	CONTENT text NOT NULL,
+	DATE_CREATED timestamp NOT NULL,
+	DATE_UPDATED timestamp NOT NULL
 );
 
 --
@@ -84,9 +84,9 @@ CREATE TABLE Posts (
 --
 
 CREATE TABLE UserConnections (
-	RequestingUser uuid,
-	RespondingUser uuid,
-	Accepted boolean
+	RequestingUser uuid NOT NULL,
+	RespondingUser uuid NOT NULL,
+	Accepted boolean NOT NULL
 );
 
 --
@@ -101,8 +101,9 @@ CREATE TABLE UserConnections (
 --
 
 CREATE TABLE Ups (
-	Userid uuid,
-	Postid int
+	Userid uuid NOT NULL,
+	Postid int NOT NULL,
+	UNIQUE ( Userid, Postid )
 );
 
 --
