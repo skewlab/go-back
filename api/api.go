@@ -68,6 +68,7 @@ func Module( e *echo.Echo ) {
 	// Ups
 	//
 	e.GET("/api/ups/user/:id", ups.Get() ) // Get a users ups
+	e.POST("/api/ups", ups.Post() ) // Get a users ups
 	e.DELETE("/api/ups/:id", ups.Delete() ) // Get a posts ups
 
 }

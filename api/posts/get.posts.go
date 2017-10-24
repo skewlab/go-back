@@ -27,12 +27,27 @@ type UserPost struct {
 func Get() echo.HandlerFunc {
 
 	var userPost UserPost
-	var query string
 
 	const(
-		allQuery string = `SELECT * FROM Posts` // Also count all ups
-		countQuery string = ``
-		oneQuery string = ``
+		allQuery string = `
+			SELECT posts.*, coalesce( up_table.up_count, 0 ) ups
+			FROM posts
+			LEFT JOIN (
+				SELECT postid, count(*) up_count
+				FROM ups
+				GROUP BY postid
+			) up_table ON up_table.postid = posts.id`
+			// NOTE: Later add where user ids are any of the logged in users contacts.
+
+		oneQuery string = `
+			SELECT posts.*, coalesce( up_table.up_count, 0 ) ups
+			FROM posts
+			LEFT JOIN (
+				SELECT postid, count(*) up_count
+				FROM ups
+				GROUP BY postid
+			) up_table ON up_table.postid = posts.id
+			WHERE postid = $1`
 	)
 
 	return func( c echo.Context ) error {
@@ -42,7 +57,7 @@ func Get() echo.HandlerFunc {
 		if id  == "all" {
 			var userPosts []UserPost
 			// TODO: Only posts from the user and its friends should be available.
-			rows, err = database.Connection().Query( allQuery )
+			rows, err := database.Connection().Query( allQuery )
 			for rows.Next() {
 				err = rows.Scan( &userPost.Id, &userPost.Userid, &userPost.Content, &userPost.Date_created, &userPost.Date_updated )
 				if err != nil { return err }
@@ -52,14 +67,8 @@ func Get() echo.HandlerFunc {
 			return c.JSON( http.StatusCreated, userPosts )
 		}
 
-		/*
-		TODO:
-		Update posts to count its ups.
-		SELECT COUNT(*) FROM Ups WHERE postid = $1
-		Store count in &userPost.Ups
-		*/
-		query = `SELECT * FROM Posts WHERE id = $1`
-		rows, err := database.Connection().Query( query, id )
+
+		rows, err := database.Connection().Query( oneQuery, id )
 		for rows.Next() {
 			err = rows.Scan( &userPost.Id, &userPost.Userid, &userPost.Content, &userPost.Date_created, &userPost.Date_updated )
 			if err != nil { return err }

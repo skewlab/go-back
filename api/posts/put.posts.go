@@ -48,7 +48,7 @@ func Put() echo.HandlerFunc {
 			updateQuery,
 			updatePost.Content,
 			now,
-			updatePost.Id //, TODO: Add logged in user here)
+			updatePost.Id ) //, TODO: Add logged in user here)
 
 		if updateErr != nil {
 			return updateErr

@@ -19,7 +19,8 @@ import (
 func Post() echo.HandlerFunc {
 
 	// TODO:
-	// Change userid from posted object to logged in user. 
+	// Change userid from posted object to logged in user.
+	// The user should only be able to up once
 	const (
 		query string = `
 			INSERT INTO
