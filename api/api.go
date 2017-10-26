@@ -15,6 +15,7 @@ import (
 	"./user-connections"
 	"./signin"
 	"./posts"
+	"./websockets"
 )
 
 func Module( e *echo.Echo ) {
@@ -62,5 +63,11 @@ func Module( e *echo.Echo ) {
 	// Signin
 	//
 	e.POST("/api/signin", signin.Post() )
+
+	//
+	// Websockets
+	//
+	e.GET( "/websocket", websock.Connect )
+
 
 }

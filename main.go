@@ -14,6 +14,7 @@ import (
 */
 type Config struct {
 	Port string
+	Static string
 }
 
 func main() {
@@ -35,7 +36,7 @@ func main() {
 	///////////////
 
 	// Static routes for main page and manage page
-	e.File("/", "static/index.html")
+	e.Use( middleware.Static( config.Static ) );
 
 	api.Module( e )
 

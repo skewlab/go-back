@@ -1,3 +1,4 @@
 {
-	"port":":0000"
+	"port":":0000",
+	"static":"/path/to/static/folder"
 }
