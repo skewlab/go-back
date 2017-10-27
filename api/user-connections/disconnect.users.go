@@ -24,8 +24,8 @@ func Disconnect() echo.HandlerFunc {
 	const (
 		query string = `
 			DELETE FROM connectionRequests
-			WHERE A = $1 AND B = $2
-			OR A = $2 AND B = $1
+			WHERE RequestingUser = $1 AND RespondingUser = $2
+			OR RequestingUser = $2 AND RespondingUser = $1
 		`
 	)
 

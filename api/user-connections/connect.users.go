@@ -28,7 +28,7 @@ func Connect() echo.HandlerFunc {
 
 	const (
 		query string = `
-			INSERT INTO connectionRequests ( A, B, Accepted )
+			INSERT INTO connectionRequests ( RequestingUser, RespondingUser, Accepted )
 			VALUES ( $1, $2, false )
 		`
 	)
