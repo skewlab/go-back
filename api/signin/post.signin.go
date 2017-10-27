@@ -4,21 +4,23 @@ Description:
 User signin endpoint
 */
 
-
 package signin
 
 import (
-	"github.com/labstack/echo"
-	"net/http"
 	"database/sql"
-	"../../database"
 	"fmt"
+	"net/http"
+	"time"
+
+	"../../database"
+	"github.com/antonlindstrom/pgstore"
+	"github.com/labstack/echo"
 )
 
 type H map[string]interface{}
 
 type UserCredentials struct {
-	Email string `json: "email"`
+	Email    string `json: "email"`
 	Password string `json: "password"`
 }
 
@@ -36,21 +38,48 @@ func Post() echo.HandlerFunc {
 			AND password = crypt( $2, password )`
 	)
 
-	return func ( c echo.Context ) error {
-		c.Bind( &userCredentials )
+	return func(c echo.Context) error {
+		c.Bind(&userCredentials)
 
-		err := database.Connection().QueryRow( query, userCredentials.Email, userCredentials.Password).Scan( &id, &email )
+		//fetch new store.... ( ? )
+		store, StoreErr := pgstore.NewPGStore("postgres://postgres:jonas@localhost:5432/go-back?sslmode=disable", []byte("secret-key"))
+		if StoreErr != nil {
+			fmt.Println(StoreErr.Error())
+		}
+		defer store.Close()
+		// Maby change to like every hour in production
+		defer store.StopCleanup(store.Cleanup(time.Minute * 2))
+
+		// Get a session.
+		session, sessionErr := store.Get(c.Request(), "session-key")
+		if sessionErr != nil {
+			fmt.Println(sessionErr.Error())
+		}
+
+		err := database.Connection().QueryRow(query, userCredentials.Email, userCredentials.Password).Scan(&id, &email)
 		fmt.Println(userCredentials)
 		switch {
 		case err == sql.ErrNoRows:
-					return c.JSON( http.StatusCreated, H{ "message":"No such user" } )
+			// Add a value.
+			session.Values["authenticated"] = false
+			// Save.
+			if err = session.Save(c.Request(), c.Response()); err != nil {
+				fmt.Printf("Error saving session: %v", err)
+			}
+			return c.JSON(http.StatusCreated, H{"message": "No such user"})
 
-			case err != nil:
-					return err
+		case err != nil:
+			return err
 
-			default:
-					var responseString string = "User " + email + " successfully signed in \n"
-					return c.JSON( http.StatusCreated, responseString )
+		default:
+			// Add a value.
+			session.Values["authenticated"] = true
+			// Save.
+			if err = session.Save(c.Request(), c.Response()); err != nil {
+				fmt.Printf("Error saving session: %v", err)
+			}
+			var responseString string = "User " + email + " successfully signed in \n"
+			return c.JSON(http.StatusCreated, responseString)
 		}
 	}
 
