@@ -15,6 +15,7 @@ import (
 	"./user-connections"
 	"./signin"
 	"./posts"
+	"./websockets"
 	"./ups"
 )
 
@@ -65,6 +66,11 @@ func Module( e *echo.Echo ) {
 	e.POST("/api/signin", signin.Post() )
 
 	//
+	// Websockets
+	//
+	e.GET( "/websocket", websock.Connect )
+
+  //
 	// Ups
 	//
 	e.GET("/api/ups/user/:id", ups.Get() ) // Get a users ups
