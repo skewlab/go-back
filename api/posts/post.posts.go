@@ -18,11 +18,10 @@ import (
 )
 
 type NewPost struct {
-	Userid 				string 		`json: "userid"`
-	Content 			string 		`json: "content"`
-	Date_created 	time.Time `json: "date_created"`
-	Date_updated 	time.Time `json: "date_updated"`
-	Ups 					int				`json:"ups"`
+	Userid 				string 		`json:"userid"`
+	Content 			string 		`json:"content"`
+	Date_created 	time.Time `json:"date_created"`
+	Date_updated 	time.Time `json:"date_updated"`
 }
 
 func Post() echo.HandlerFunc {
@@ -33,14 +32,14 @@ func Post() echo.HandlerFunc {
 	const (
 		query string = `
 			INSERT INTO
-			Posts ( userid, content, date_created, date_updated, ups )
-			VALUES ( $1, $2, $3, $4, $5 )`
+			Posts ( userid, content, date_created, date_updated )
+			VALUES ( $1, $2, $3, $4 )`
 	)
 
 	return func( c echo.Context ) error {
 		c.Bind( &newPost )
 
-		_, err := database.Connection().Query( query, newPost.Userid, newPost.Content, now, now, 0 )
+		_, err := database.Connection().Query( query, newPost.Userid, newPost.Content, now, now )
 
 		if err != nil {
 			return err
