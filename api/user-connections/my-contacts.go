@@ -2,7 +2,7 @@
 Author: Filip Johansson
 
 Description:
-Get user connections
+Get all contacts of a user.
 */
 
 package userConnections
@@ -13,7 +13,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-type UserConnection struct {
+type UserContact struct {
 	RequestingUser	string `json:"requestingUser"`
 	RespondingUser	string `json:"respondingUser"`
 	Accepted  			bool	 `json:"accepted"`
@@ -23,14 +23,24 @@ func Get() echo.HandlerFunc {
 
 	const (
 		query string = `
-			SELECT *
-			FROM UserConnections
-			WHERE RequestingUser = $1 OR RespondingUser = $1
+			SELECT * FROM (
+				(SELECT RespondingUser
+				FROM UserConnections
+				WHERE RequestingUser = $1
+				AND Accepted = true)
+
+				UNION
+
+				(SELECT RequestingUser
+				FROM UserConnections
+				WHERE RespondingUser = $1
+				AND Accepted = true)
+			)
 		`
 	)
 
-	var userConnection UserConnection
-	var userConnections []UserConnection
+	var userContact UserContact
+	var userContacts []UserContacts
 
 	return func ( c echo.Context ) error {
 
@@ -41,11 +51,10 @@ func Get() echo.HandlerFunc {
 		for rows.Next() {
 
 			err = rows.Scan(
-				&userConnection.RequestingUser,
-				&userConnection.RespondingUser,
-				&userConnection.Accepted )
+				&userContact.RequestingUser
+			)
 
-			userConnections = append( userConnections, userConnection )
+			userContacts = append( userContacts, userContact )
 
 			if err != nil { return err }
 
