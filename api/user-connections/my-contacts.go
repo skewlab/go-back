@@ -9,38 +9,45 @@ package userConnections
 
 import (
 	"net/http"
+	"database/sql"
 	"../../database"
 	"github.com/labstack/echo"
 )
 
-type UserContact struct {
-	RequestingUser	string `json:"requestingUser"`
-	RespondingUser	string `json:"respondingUser"`
-	Accepted  			bool	 `json:"accepted"`
+type Contact struct {
+	Id 					string				 `json:"id"`
+	Email 			string 				 `json:"email"`
+	Alias 			sql.NullString `json:"alias"`
+	Birthdate 	sql.NullString `json:"birthdate"`
+	Avatar 			sql.NullString `json:"avatar"`
+	Description sql.NullString `json:"description"`
+	Website 		sql.NullString `json:"website"`
+	Phonenumber sql.NullString `json:"phonenumber"`
 }
 
-func Get() echo.HandlerFunc {
+func MyContacts() echo.HandlerFunc {
 
 	const (
 		query string = `
-			SELECT * FROM (
-				(SELECT RespondingUser
+			SELECT id, email, alias, birthdate, avatar, description, website, phonenumber
+			FROM Users
+			JOIN ((
+				SELECT RespondingUser contacts
 				FROM UserConnections
 				WHERE RequestingUser = $1
 				AND Accepted = true)
 
-				UNION
-
-				(SELECT RequestingUser
+			UNION (
+				SELECT RequestingUser contact
 				FROM UserConnections
 				WHERE RespondingUser = $1
-				AND Accepted = true)
-			)
+				AND Accepted = true
+			)) as c ON c.contacts = Users.id ;
 		`
 	)
 
-	var userContact UserContact
-	var userContacts []UserContacts
+	var contact Contact
+	var contacts []Contact
 
 	return func ( c echo.Context ) error {
 
@@ -51,16 +58,24 @@ func Get() echo.HandlerFunc {
 		for rows.Next() {
 
 			err = rows.Scan(
-				&userContact.RequestingUser
-			)
+				&contact.Id,
+				&contact.Email,
+				&contact.Alias,
+				&contact.Birthdate,
+				&contact.Avatar,
+				&contact.Description,
+				&contact.Website,
+				&contact.Phonenumber )
 
-			userContacts = append( userContacts, userContact )
+			contacts = append( contacts, contact )
 
-			if err != nil { return err }
+			if err != nil {
+				return err
+			}
 
 		}
 
-		return c.JSON( http.StatusCreated, userConnections )
+		return c.JSON( http.StatusCreated, contacts )
 
 	}
 
