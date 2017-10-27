@@ -15,9 +15,9 @@ import (
 )
 
 type UserConnection struct {
-	Requester string `json: "requester"`
-	Accepter  string `json: "accepter"`
-	Accepted  bool	 `json: "accepted"`
+	RequestingUser	string `json:"requestingUser"`
+	RespondingUser	string `json:"respondingUser"`
+	Accepted  			bool	 `json:"accepted"`
 }
 
 func Get() echo.HandlerFunc {
@@ -26,7 +26,7 @@ func Get() echo.HandlerFunc {
 		query string = `
 			SELECT *
 			FROM UserConnections
-			WHERE A = $1 OR B = $1
+			WHERE RequestingUser = $1 OR RespondingUser = $1
 		`
 	)
 
@@ -42,8 +42,8 @@ func Get() echo.HandlerFunc {
 		for rows.Next() {
 
 			err = rows.Scan(
-				&userConnection.Requester,
-				&userConnection.Accepter,
+				&userConnection.RequestingUser,
+				&userConnection.RespondingUser,
 				&userConnection.Accepted )
 
 			userConnections = append( userConnections, userConnection )

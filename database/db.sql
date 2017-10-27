@@ -46,10 +46,10 @@ CREATE TABLE Users (
 
 CREATE TABLE Article (
   ID SERIAL,
-  TITLE varchar(255),
-  HTML text,
-  DATE_CREATED timestamp,
-  DATE_UPDATED timestamp
+  TITLE varchar(255) NOT NULL,
+  HTML text NOT NULL,
+  DATE_CREATED timestamp NOT NULL,
+  DATE_UPDATED timestamp NOT NULL
 );
 
 --
@@ -66,11 +66,10 @@ CREATE TABLE Article (
 
 CREATE TABLE Posts (
 	ID SERIAL,
-	USERID uuid,
-	CONTENT text,
-	DATE_CREATED timestamp,
-	DATE_UPDATED timestamp,
-	UPS int
+	USERID uuid NOT NULL,
+	CONTENT text NOT NULL,
+	DATE_CREATED timestamp NOT NULL,
+	DATE_UPDATED timestamp NOT NULL
 );
 
 --
@@ -85,14 +84,30 @@ CREATE TABLE Posts (
 --
 
 CREATE TABLE UserConnections (
-	A uuid,
-	B uuid,
-	Accepted boolean
+	RequestingUser uuid NOT NULL,
+	RespondingUser uuid NOT NULL,
+	Accepted boolean NOT NULL
 );
 
 --
 -- Comments:
 -- A reaches out to B. If b Accepts the accepted field is set to true.
 --  If relation is terminated the row is removed from the database.
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table contacts
+--
+
+CREATE TABLE Ups (
+	Userid uuid NOT NULL,
+	Postid int NOT NULL,
+	UNIQUE ( Userid, Postid )
+);
+
+--
+-- Comments:
+--
 
 -- --------------------------------------------------------
