@@ -22,7 +22,7 @@ CREATE TABLE Users (
 	ID uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
 	EMAIL text NOT NULL,
 	PASSWORD text NOT NULL,
-	ALIAS text,
+	ALIAS text NOT NULL,
 	BIRTHDATE timestamp,
 	AVATAR text,
 	DESCRIPTION text,
