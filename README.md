@@ -18,7 +18,7 @@ A general purpose backend in GO
   "dbname"   : "<dbname>"
 }
 ```
- 
+
 ### Server
 1. Duplicate example.config.json
 2. Rename the copy to config.json
@@ -26,9 +26,13 @@ A general purpose backend in GO
 4. Change the fields to match your setup:
 ```JSON
 {
-  "port" : ":0000"
+  "port" : ":0000",
+	"static": "/path/to/static/folder",
+	"devPort": ":0001"
 }
 ```
+The devPort setting is the port on which front end is developed.
+
 ### Contact
 If you are using the contact module, you will need to configure contact.config.json.
 1. Duplicate example.contact.config.json
