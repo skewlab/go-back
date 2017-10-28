@@ -11,6 +11,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
+	"net/http"
 
 	"github.com/antonlindstrom/pgstore"
 	"github.com/gorilla/sessions"
@@ -56,7 +57,7 @@ func CreateSessionId() string {
 	return base64.URLEncoding.EncodeToString(b)
 }
 
-func StartSession(c echo.Context) {
+func StartSession(c echo.Context) *http.Cookie {
 	cookie, err := c.Request().Cookie("session-key")
 	if err != nil || cookie.Value == "" {
 		sid := CreateSessionId()
@@ -65,13 +66,15 @@ func StartSession(c echo.Context) {
 		sess.Values["authenticated"] = "false"
 		SaveSession(c, sess)
 		//defer store.Close()
+
 	} else {
-		cookie, err := c.Cookie("session-key")
-		if err != nil {
-			fmt.Println(err)
-		}
+		sess := GetSession(c)
+		fmt.Println(sess.Values["authenticated"])
 		fmt.Println(cookie)
+		fmt.Println(cookie.Value)
 		//sid := cookie.Value
 		//session := GetSession(c)
+
 	}
+	return cookie
 }
