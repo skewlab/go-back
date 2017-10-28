@@ -2,8 +2,7 @@
 Author: Filip Johansson
 
 Description:
-Get user
-RETURN: <json>
+Get user connections
 */
 
 package userConnections
@@ -48,7 +47,9 @@ func Get() echo.HandlerFunc {
 
 			userConnections = append( userConnections, userConnection )
 
-			if err != nil { return err }
+			if err != nil {
+				return err
+			}
 
 		}
 
