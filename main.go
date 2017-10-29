@@ -30,7 +30,7 @@ func main() {
 	//e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"localhost", "http://localhost:3000", "127.0.0.1"},
+		AllowOrigins: []string{"localhost", "http://localhost:3001", "127.0.0.1"},
 		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
 	}))
 	///////////////
