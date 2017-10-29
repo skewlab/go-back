@@ -22,6 +22,7 @@ type UserPost struct {
 	Content 			string 		`json:"content"`
 	Date_created 	time.Time `json:"date_created"`
 	Date_updated 	time.Time `json:"date_updated"`
+	Ups 					int 			`json:"ups""`
 }
 
 func Get() echo.HandlerFunc {
@@ -59,7 +60,13 @@ func Get() echo.HandlerFunc {
 			// TODO: Only posts from the user and its friends should be available.
 			rows, err := database.Connection().Query( allQuery )
 			for rows.Next() {
-				err = rows.Scan( &userPost.Id, &userPost.Userid, &userPost.Content, &userPost.Date_created, &userPost.Date_updated )
+				err = rows.Scan(
+					&userPost.Id,
+					&userPost.Userid,
+					&userPost.Content,
+					&userPost.Date_created,
+					&userPost.Date_updated,
+				 	&userPost.Ups )
 				if err != nil { return err }
 				userPosts = append( userPosts, userPost )
 			}
@@ -70,7 +77,13 @@ func Get() echo.HandlerFunc {
 
 		rows, err := database.Connection().Query( oneQuery, id )
 		for rows.Next() {
-			err = rows.Scan( &userPost.Id, &userPost.Userid, &userPost.Content, &userPost.Date_created, &userPost.Date_updated )
+			err = rows.Scan(
+				&userPost.Id,
+				&userPost.Userid,
+				&userPost.Content,
+				&userPost.Date_created,
+				&userPost.Date_updated,
+			 	&userPost.Ups )
 			if err != nil { return err }
 		}
 

@@ -42,7 +42,8 @@ func Module( e *echo.Echo ) {
 
 	// NOTE: Change this to DELETE after sessions are working,
 	//			 change /remove to /:id
-	e.POST("/api/user-connections/remove", userConnections.Disconnect() )
+	e.POST( "/api/user-connections/remove", userConnections.Disconnect() )
+	e.GET( "/api/my-contacts/:id", userConnections.MyContacts() )
 
 	//
 	// Articles
