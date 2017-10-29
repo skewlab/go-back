@@ -8,7 +8,6 @@ package signin
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 
 	"../../database"
@@ -43,13 +42,10 @@ func Post() echo.HandlerFunc {
 		session := globalSessions.GetSession(c)
 
 		err := database.Connection().QueryRow(query, userCredentials.Email, userCredentials.Password).Scan(&id, &email)
-		fmt.Println(userCredentials)
-		//fmt.Println(session)
+
 		switch {
 		case err == sql.ErrNoRows:
-			session.Values["authenticated"] = false
-			session.Save(c.Request(), c.Response())
-			return c.JSON(http.StatusCreated, H{"message": "No such user"})
+			return c.JSON(http.StatusForbidden, H{"message": "No such user"})
 
 		case err != nil:
 			return err
@@ -57,9 +53,9 @@ func Post() echo.HandlerFunc {
 		default:
 			session.Values["authenticated"] = true
 			session.Save(c.Request(), c.Response())
-			fmt.Println(session)
+
 			var responseString string = "User " + email + " successfully signed in \n"
-			return c.JSON(http.StatusCreated, H{"message": responseString})
+			return c.JSON(http.StatusOK, H{"message": responseString})
 		}
 	}
 

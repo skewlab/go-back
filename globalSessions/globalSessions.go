@@ -1,7 +1,9 @@
 /*
 Author: Jonas Johansson
+Email:  jan.jonas.johansson@gmail.com
+Github: jjojo
 Description:
-Session handeling
+Session handeling and retrieving
 */
 
 package globalSessions
@@ -24,20 +26,21 @@ var (
 	store = sessions.NewCookieStore(key)
 )
 
+/*
+	Get session, if no session is found it creates one
+*/
 func GetSession(c echo.Context) *sessions.Session {
-	session, err := store.Get(c.Request(), "cookie-name")
+	// "session-key" is just name of the cookie value
+	session, err := store.Get(c.Request(), "session-key")
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 	return session
 }
 
-// func SaveSession(c echo.Context, sess *sessions.Session) {
-// 	if err := sess.Save(c.Request(), c.Response()); err != nil {
-// 		fmt.Printf("Error saving session: %v", err)
-// 	}
-// }
-
+/*
+	Generate unique session id for user
+*/
 func CreateSessionId() string {
 	b := make([]byte, 32)
 	if _, err := io.ReadFull(rand.Reader, b); err != nil {
@@ -45,25 +48,3 @@ func CreateSessionId() string {
 	}
 	return base64.URLEncoding.EncodeToString(b)
 }
-
-// func StartSession(c echo.Context) *http.Cookie {
-// 	cookie, err := c.Request().Cookie("session-key")
-// 	if err != nil || cookie.Value == "" {
-// 		sid := CreateSessionId()
-// 		Store(sid)
-// 		sess := GetSession(c)
-// 		sess.Values["authenticated"] = "false"
-// 		SaveSession(c, sess)
-// 		//defer store.Close()
-
-// 	} else {
-// 		sess := GetSession(c)
-// 		fmt.Println(sess.Values["authenticated"])
-// 		fmt.Println(cookie)
-// 		fmt.Println(cookie.Value)
-// 		//sid := cookie.Value
-// 		//session := GetSession(c)
-
-// 	}
-// 	return cookie
-// }
