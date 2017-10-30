@@ -9,14 +9,15 @@ package userConnections
 
 import (
 	"net/http"
+
 	"../../database"
 	"github.com/labstack/echo"
 )
 
 type UserConnection struct {
-	RequestingUser	string `json:"requestingUser"`
-	RespondingUser	string `json:"respondingUser"`
-	Accepted  			bool	 `json:"accepted"`
+	RequestingUser string `json:"requestingUser"`
+	RespondingUser string `json:"respondingUser"`
+	Accepted       bool   `json:"accepted"`
 }
 
 func Get() echo.HandlerFunc {
@@ -32,20 +33,20 @@ func Get() echo.HandlerFunc {
 	var userConnection UserConnection
 	var userConnections []UserConnection
 
-	return func ( c echo.Context ) error {
+	return func(c echo.Context) error {
 
-		loggedInUser := c.Param( "id" )
+		loggedInUser := c.Param("id")
 
-		rows, err := database.Connection().Query( query, loggedInUser )
+		rows, err := database.Connection().Query(query, loggedInUser)
 
 		for rows.Next() {
 
 			err = rows.Scan(
 				&userConnection.RequestingUser,
 				&userConnection.RespondingUser,
-				&userConnection.Accepted )
+				&userConnection.Accepted)
 
-			userConnections = append( userConnections, userConnection )
+			userConnections = append(userConnections, userConnection)
 
 			if err != nil {
 				return err
@@ -53,7 +54,7 @@ func Get() echo.HandlerFunc {
 
 		}
 
-		return c.JSON( http.StatusCreated, userConnections )
+		return c.JSON(http.StatusCreated, userConnections)
 
 	}
 

@@ -8,6 +8,7 @@ package signin
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"../../database"
@@ -51,7 +52,9 @@ func Post() echo.HandlerFunc {
 			return err
 
 		default:
+			fmt.Println(id)
 			session.Values["authenticated"] = true
+			session.Values["userId"] = id
 			session.Save(c.Request(), c.Response())
 
 			var responseString string = "User " + email + " successfully signed in \n"
