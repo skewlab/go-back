@@ -13,6 +13,7 @@ import (
 	"./authenticate"
 	"./posts"
 	"./signin"
+	"./signout"
 	"./ups"
 	"./user-connections"
 	"./users"
@@ -66,6 +67,11 @@ func Module(e *echo.Echo) {
 	// Signin
 	//
 	e.POST("/api/signin", signin.Post())
+
+	//
+	// Sign out
+	//
+	e.POST("/api/signout", signout.Post())
 
 	//
 	// Authenticate
