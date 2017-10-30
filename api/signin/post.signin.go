@@ -4,21 +4,21 @@ Description:
 User signin endpoint
 */
 
-
 package signin
 
 import (
-	"github.com/labstack/echo"
-	"net/http"
 	"database/sql"
+	"net/http"
+
 	"../../database"
-	"fmt"
+	"../../globalSessions"
+	"github.com/labstack/echo"
 )
 
 type H map[string]interface{}
 
 type UserCredentials struct {
-	Email string `json: "email"`
+	Email    string `json: "email"`
 	Password string `json: "password"`
 }
 
@@ -36,21 +36,26 @@ func Post() echo.HandlerFunc {
 			AND password = crypt( $2, password )`
 	)
 
-	return func ( c echo.Context ) error {
-		c.Bind( &userCredentials )
+	return func(c echo.Context) error {
+		c.Bind(&userCredentials)
 
-		err := database.Connection().QueryRow( query, userCredentials.Email, userCredentials.Password).Scan( &id, &email )
-		fmt.Println(userCredentials)
+		session := globalSessions.GetSession(c)
+
+		err := database.Connection().QueryRow(query, userCredentials.Email, userCredentials.Password).Scan(&id, &email)
+
 		switch {
 		case err == sql.ErrNoRows:
-					return c.JSON( http.StatusCreated, H{ "message":"No such user" } )
+			return c.JSON(http.StatusForbidden, H{"message": "No such user"})
 
-			case err != nil:
-					return err
+		case err != nil:
+			return err
 
-			default:
-					var responseString string = "User " + email + " successfully signed in \n"
-					return c.JSON( http.StatusCreated, responseString )
+		default:
+			session.Values["authenticated"] = true
+			session.Save(c.Request(), c.Response())
+
+			var responseString string = "User " + email + " successfully signed in \n"
+			return c.JSON(http.StatusOK, H{"message": responseString})
 		}
 	}
 
