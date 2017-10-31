@@ -50,12 +50,12 @@ func MyContacts() echo.HandlerFunc {
 		`
 	)
 
-	var contact Contact
-	var contacts []Contact
-
 	return func(c echo.Context) error {
+		var contact Contact
+		var contacts []Contact
 
 		session := globalSessions.GetSession(c)
+
 		if value, ok := session.Values["userId"].(string); ok {
 			loggedInUser := value
 
@@ -71,14 +71,13 @@ func MyContacts() echo.HandlerFunc {
 					&contact.Avatar,
 					&contact.Description,
 					&contact.Website,
-					&contact.Phonenumber)
-
+					&contact.Phonenumber
+				)
 				contacts = append(contacts, contact)
 
 				if err != nil {
 					return err
 				}
-
 			}
 			return c.JSON(http.StatusCreated, contacts)
 		}
