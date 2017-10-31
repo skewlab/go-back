@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"database/sql"
 	"../../database"
+	"../../globalSessions"
 	"github.com/labstack/echo"
 )
 
@@ -44,6 +45,12 @@ func Get() echo.HandlerFunc {
 
 		userId := c.Param( "id" )
 
+		if userId == "me"{
+			session := globalSessions.GetSession(c)
+			if value, ok := session.Values["userId"].(string); ok {
+				userId = value
+			}
+		}
 		rows, err := database.Connection().Query( query, userId )
 
 		for rows.Next() {

@@ -71,8 +71,8 @@ func MyContacts() echo.HandlerFunc {
 					&contact.Avatar,
 					&contact.Description,
 					&contact.Website,
-					&contact.Phonenumber
-				)
+					&contact.Phonenumber)
+					
 				contacts = append(contacts, contact)
 
 				if err != nil {
