@@ -1,4 +1,4 @@
-select * from Users;--
+--
 -- Init script for database
 -- Adding test users and relations among the users
 --
