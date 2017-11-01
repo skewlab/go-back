@@ -8,20 +8,24 @@ Get all contacts of a user.
 package userConnections
 
 import (
-	"net/http"
 	"database/sql"
+	"fmt"
+	"net/http"
+
+	"../../globalSessions"
+
 	"../../database"
 	"github.com/labstack/echo"
 )
 
 type Contact struct {
-	Id 					string				 `json:"id"`
-	Email 			string 				 `json:"email"`
-	Alias 			sql.NullString `json:"alias"`
-	Birthdate 	sql.NullString `json:"birthdate"`
-	Avatar 			sql.NullString `json:"avatar"`
+	Id          string         `json:"id"`
+	Email       string         `json:"email"`
+	Alias       sql.NullString `json:"alias"`
+	Birthdate   sql.NullString `json:"birthdate"`
+	Avatar      sql.NullString `json:"avatar"`
 	Description sql.NullString `json:"description"`
-	Website 		sql.NullString `json:"website"`
+	Website     sql.NullString `json:"website"`
 	Phonenumber sql.NullString `json:"phonenumber"`
 }
 
@@ -46,37 +50,37 @@ func MyContacts() echo.HandlerFunc {
 		`
 	)
 
-	var contact Contact
-	var contacts []Contact
+	return func(c echo.Context) error {
+		var contact Contact
+		var contacts []Contact
 
-	return func ( c echo.Context ) error {
+		session := globalSessions.GetSession(c)
 
-		loggedInUser := c.Param( "id" )
+		if value, ok := session.Values["userId"].(string); ok {
+			loggedInUser := value
 
-		rows, err := database.Connection().Query( query, loggedInUser )
+			rows, err := database.Connection().Query(query, loggedInUser)
+			fmt.Println(rows)
+			for rows.Next() {
 
-		for rows.Next() {
+				err = rows.Scan(
+					&contact.Id,
+					&contact.Email,
+					&contact.Alias,
+					&contact.Birthdate,
+					&contact.Avatar,
+					&contact.Description,
+					&contact.Website,
+					&contact.Phonenumber)
+					
+				contacts = append(contacts, contact)
 
-			err = rows.Scan(
-				&contact.Id,
-				&contact.Email,
-				&contact.Alias,
-				&contact.Birthdate,
-				&contact.Avatar,
-				&contact.Description,
-				&contact.Website,
-				&contact.Phonenumber )
-
-			contacts = append( contacts, contact )
-
-			if err != nil {
-				return err
+				if err != nil {
+					return err
+				}
 			}
-
+			return c.JSON(http.StatusCreated, contacts)
 		}
-
-		return c.JSON( http.StatusCreated, contacts )
-
+		return c.JSON(http.StatusInternalServerError, "no user id found in session")
 	}
-
 }
