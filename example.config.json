@@ -1,5 +1,5 @@
 {
-	"port":":0000",
-	"devPort":":0000",
-	"static":"/path/to/static/folder"
+  "port":":0000",
+  "frontEndDevPort":":0000",
+  "static":"/path/to/static/folder"
 }
