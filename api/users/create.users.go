@@ -11,44 +11,57 @@ package users
 
 import (
 	"net/http"
-	"github.com/labstack/echo"
+
 	"../../database"
+	"github.com/labstack/echo"
 )
 
 type NewUser struct {
-	Email 		string `json: "username"`
-	Password	string `json: "password"`
+	Email    string `json: "username"`
+	Password string `json: "password"`
+	Alias    string `json:"alias"`
+	Avatar   string `json:"avatar"`
+	//Birthdate   string `json:"birthdate"`
+	Description string `json:"description"`
+	Website     string `json:"website"`
+	Phonenumber string `json:"phonenumber"`
 }
 
 /*
-TODO:
+TODO: fix Birthdate formats/functionality
 */
 func Create() echo.HandlerFunc {
 
 	const (
 		query string = `
-			INSERT INTO Users ( email, password )
-			VALUES ( $1, crypt( $2, gen_salt( 'bf', 8 ) ) )
+			INSERT INTO Users ( email, password, alias, avatar, description, website, phonenumber )
+			VALUES ( $1, crypt( $2, gen_salt( 'bf', 8 ) ), $3, $4, $5, $6, $7 )
 			RETURNING ID
 		`
 	)
 
 	var newUser NewUser
 
-	return func( c echo.Context ) error {
+	return func(c echo.Context) error {
 
-		c.Bind( &newUser )
+		c.Bind(&newUser)
 
 		_, err := database.Connection().Query(
 			query,
 			newUser.Email,
-			newUser.Password )
+			newUser.Password,
+			newUser.Alias,
+			newUser.Avatar,
+			//newUser.Birthdate,
+			newUser.Description,
+			newUser.Website,
+			newUser.Phonenumber)
 
-		if err != nil { return err }
+		if err != nil {
+			return err
+		}
 
-		return c.JSON( http.StatusCreated, H{ "message": "User added" } )
+		return c.JSON(http.StatusCreated, H{"message": "User added"})
 	}
-
-
 
 }
