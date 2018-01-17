@@ -82,7 +82,7 @@ func Get() echo.HandlerFunc {
 			if value, ok := session.Values["userId"].(string); ok {
 				loggedInUser := value
 
-				rows, err := database.Connection().Query(allQuery, loggedInUser)
+				rows, err := database.DB.Query(allQuery, loggedInUser)
 				for rows.Next() {
 					err = rows.Scan(
 						&userPost.Id,
@@ -104,7 +104,7 @@ func Get() echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, "no user id found in session")
 		}
 
-		rows, err := database.Connection().Query(oneQuery, id)
+		rows, err := database.DB.Query(oneQuery, id)
 		for rows.Next() {
 			err = rows.Scan(
 				&userPost.Id,

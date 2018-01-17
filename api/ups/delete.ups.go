@@ -9,6 +9,7 @@ package ups
 
 import (
 	"net/http"
+
 	"../../database"
 	"github.com/labstack/echo"
 )
@@ -29,17 +30,21 @@ func Delete() echo.HandlerFunc {
 			WHERE Postid = $1`
 	)
 
-	return func( c echo.Context ) error {
+	return func(c echo.Context) error {
 
-		id := c.Param( "id" )
+		id := c.Param("id")
 
-		_, err := database.Connection().Query( removeQuery, id )
-		if err != nil { return err }
+		_, err := database.DB.Query(removeQuery, id)
+		if err != nil {
+			return err
+		}
 
-		_, err = database.Connection().Query( updateQuery, id )
-		if err != nil { return err }
+		_, err = database.DB.Query(updateQuery, id)
+		if err != nil {
+			return err
+		}
 
-		return c.JSON( http.StatusCreated, H{ "message": "Up removed" } )
+		return c.JSON(http.StatusCreated, H{"message": "Up removed"})
 	}
 
 }

@@ -11,16 +11,17 @@ Update article in the database.
 package article
 
 import (
-	"time"
 	"net/http"
+	"time"
+
 	"../../database"
 	"github.com/labstack/echo"
 )
 
 type UpdateArticle struct {
-	Id int `json: "id"`
+	Id    int    `json: "id"`
 	Title string `json: "title"`
-	Html string `json: "html"`
+	Html  string `json: "html"`
 }
 
 func Put() echo.HandlerFunc {
@@ -42,14 +43,14 @@ func Put() echo.HandlerFunc {
 			WHERE NOT EXISTS ( SELECT 1 FROM Article WHERE id = $4 )`
 	)
 
-	return func( c echo.Context ) error {
-		c.Bind( &updateArticle )
+	return func(c echo.Context) error {
+		c.Bind(&updateArticle)
 
 		// Run update query
-		_, updateErr := database.Connection().Query( updateQuery, updateArticle.Title, updateArticle.Html, now, updateArticle.Id )
+		_, updateErr := database.DB.Query(updateQuery, updateArticle.Title, updateArticle.Html, now, updateArticle.Id)
 
 		// Add new row if it doesnt exist
-		_, insertErr := database.Connection().Query( insertQuery, updateArticle.Title, updateArticle.Html, now, updateArticle.Id )
+		_, insertErr := database.DB.Query(insertQuery, updateArticle.Title, updateArticle.Html, now, updateArticle.Id)
 
 		if updateErr != nil {
 			return updateErr
@@ -59,9 +60,7 @@ func Put() echo.HandlerFunc {
 			return insertErr
 		}
 
-		return c.JSON( http.StatusCreated, H{ "message": "Article updated" } )
+		return c.JSON(http.StatusCreated, H{"message": "Article updated"})
 	}
-
-
 
 }
