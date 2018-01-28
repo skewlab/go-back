@@ -12,6 +12,7 @@ import (
 	"./article"
 	"./authenticate"
 	"./posts"
+	"./search"
 	"./signin"
 	"./signout"
 	"./ups"
@@ -89,5 +90,10 @@ func Module(e *echo.Echo) {
 	e.GET("/api/ups/user/:id", ups.Get())  // Get a users ups
 	e.POST("/api/ups", ups.Post())         // Get a users ups
 	e.DELETE("/api/ups/:id", ups.Delete()) // Get a posts ups
+
+	//
+	// Search
+	//
+	e.POST("/api/search", search.Post()) // Search for a alias
 
 }

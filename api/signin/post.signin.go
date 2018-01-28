@@ -41,9 +41,11 @@ func Post() echo.HandlerFunc {
 		c.Bind(&userCredentials)
 
 		session := globalSessions.GetSession(c)
-
-		err := database.Connection().QueryRow(query, userCredentials.Email, userCredentials.Password).Scan(&id, &email)
-
+		fmt.Println(" I SIGN IN innan QUERY!")
+		fmt.Println(database.DB)
+		fmt.Println("after")
+		err := database.DB.QueryRow(query, userCredentials.Email, userCredentials.Password).Scan(&id, &email)
+		fmt.Println(" I SIGN IN EFTER QUERY!")
 		switch {
 		case err == sql.ErrNoRows:
 			return c.JSON(http.StatusForbidden, H{"message": "No such user"})

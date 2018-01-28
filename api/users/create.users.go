@@ -46,7 +46,7 @@ func Create() echo.HandlerFunc {
 
 		c.Bind(&newUser)
 
-		_, err := database.Connection().Query(
+		_, err := database.DB.Query(
 			query,
 			newUser.Email,
 			newUser.Password,

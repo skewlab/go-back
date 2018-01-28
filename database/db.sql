@@ -11,6 +11,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO public;
 
 CREATE EXTENSION pgcrypto;
+CREATE EXTENSION pg_trgm;
 
 -- --------------------------------------------------------
 
@@ -108,6 +109,7 @@ CREATE TABLE Ups (
 
 --
 -- Comments:
---
+-- Add textsearch for user Alias, email and phone number
 
 -- --------------------------------------------------------
+create index alias_gin on users using gin(alias gin_trgm_ops);

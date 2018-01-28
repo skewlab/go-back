@@ -11,17 +11,18 @@ Add article entry to the database.
 package posts
 
 import (
-	"github.com/labstack/echo"
-	"time"
 	"net/http"
+	"time"
+
 	"../../database"
+	"github.com/labstack/echo"
 )
 
 type NewPost struct {
-	Userid 				string 		`json:"userid"`
-	Content 			string 		`json:"content"`
-	Date_created 	time.Time `json:"date_created"`
-	Date_updated 	time.Time `json:"date_updated"`
+	Userid       string    `json:"userid"`
+	Content      string    `json:"content"`
+	Date_created time.Time `json:"date_created"`
+	Date_updated time.Time `json:"date_updated"`
 }
 
 func Post() echo.HandlerFunc {
@@ -36,16 +37,16 @@ func Post() echo.HandlerFunc {
 			VALUES ( $1, $2, $3, $4 )`
 	)
 
-	return func( c echo.Context ) error {
-		c.Bind( &newPost )
+	return func(c echo.Context) error {
+		c.Bind(&newPost)
 
-		_, err := database.Connection().Query( query, newPost.Userid, newPost.Content, now, now )
+		_, err := database.DB.Query(query, newPost.Userid, newPost.Content, now, now)
 
 		if err != nil {
 			return err
 		}
 
-		return c.JSON( http.StatusCreated, H{ "message":"Post added" } )
+		return c.JSON(http.StatusCreated, H{"message": "Post added"})
 
 	}
 

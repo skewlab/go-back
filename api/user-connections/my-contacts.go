@@ -59,7 +59,7 @@ func MyContacts() echo.HandlerFunc {
 		if value, ok := session.Values["userId"].(string); ok {
 			loggedInUser := value
 
-			rows, err := database.Connection().Query(query, loggedInUser)
+			rows, err := database.DB.Query(query, loggedInUser)
 			fmt.Println(rows)
 			for rows.Next() {
 
@@ -72,7 +72,7 @@ func MyContacts() echo.HandlerFunc {
 					&contact.Description,
 					&contact.Website,
 					&contact.Phonenumber)
-					
+
 				contacts = append(contacts, contact)
 
 				if err != nil {

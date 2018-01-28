@@ -9,8 +9,9 @@ package posts
 
 import (
 	"net/http"
-	"../../database"
 	"time"
+
+	"../../database"
 	"../../globalSessions"
 	"github.com/labstack/echo"
 )
@@ -18,27 +19,33 @@ import (
 type H map[string]interface{}
 
 type UserPost struct {
-	Id 						int 			`json:"id"`
-	Userid 				string 		`json:"userid"`
-	Content 			string 		`json:"content"`
-	Date_created 	time.Time `json:"date_created"`
-	Date_updated 	time.Time `json:"date_updated"`
-	Ups 					int 			`json:"ups""`
+	Id           int       `json:"id"`
+	Userid       string    `json:"userid"`
+	Content      string    `json:"content"`
+	Date_created time.Time `json:"date_created"`
+	Date_updated time.Time `json:"date_updated"`
+	Ups          int       `json:"ups""`
+	Alias        string    `json:"alias""`
+	Avatar       string    `json:"avatar""`
 }
 
 func Get() echo.HandlerFunc {
 
 	var userPost UserPost
 
-	const(
+	const (
 		allQuery string = `
-		SELECT posts.*, coalesce( up_table.up_count, 0 ) ups
+		SELECT posts.*, coalesce( up_table.up_count, 0 ) ups, users_table.alias, users_table.avatar
 		FROM posts
 		LEFT JOIN (
 			SELECT postid, count(*) up_count
 			FROM ups
 			GROUP BY postid
 		) up_table ON up_table.postid = posts.id
+		LEFT JOIN (
+			SELECT users.id, users.alias, users.avatar
+			FROM users
+		) users_table ON users_table.id = posts.userid
 			WHERE userid=$1 OR userid IN (SELECT id
 			FROM Users
 			JOIN ((
@@ -53,30 +60,29 @@ func Get() echo.HandlerFunc {
 				WHERE RespondingUser = $1
 				AND Accepted = true
 			)) as c ON c.contacts = Users.id)`
-			// NOTE: Above query can probably be written more efficient
 
 		oneQuery string = `
-			SELECT posts.*, coalesce( up_table.up_count, 0 ) ups
-			FROM posts
-			LEFT JOIN (
-				SELECT postid, count(*) up_count
-				FROM ups
-				GROUP BY postid
-			) up_table ON up_table.postid = posts.id
-			WHERE postid = $1`
+		SELECT posts.*, coalesce( up_table.up_count, 0 ) ups
+		FROM posts
+		LEFT JOIN (
+			SELECT postid, count(*) up_count
+			FROM ups
+			GROUP BY postid
+		) up_table ON up_table.postid = posts.id
+		WHERE postid = $1`
 	)
 
-	return func( c echo.Context ) error {
+	return func(c echo.Context) error {
 
-		id := c.Param( "id" )
+		id := c.Param("id")
 
-		if id  == "all" {
+		if id == "all" {
 			var userPosts []UserPost
 			session := globalSessions.GetSession(c)
 			if value, ok := session.Values["userId"].(string); ok {
 				loggedInUser := value
-	
-				rows, err := database.Connection().Query( allQuery, loggedInUser )
+
+				rows, err := database.DB.Query(allQuery, loggedInUser)
 				for rows.Next() {
 					err = rows.Scan(
 						&userPost.Id,
@@ -84,18 +90,21 @@ func Get() echo.HandlerFunc {
 						&userPost.Content,
 						&userPost.Date_created,
 						&userPost.Date_updated,
-						&userPost.Ups )
-					if err != nil { return err }
-					userPosts = append( userPosts, userPost )
+						&userPost.Ups,
+						&userPost.Alias,
+						&userPost.Avatar)
+					if err != nil {
+						return err
+					}
+					userPosts = append(userPosts, userPost)
 				}
 				// Return all articles
-				return c.JSON( http.StatusCreated, userPosts )
+				return c.JSON(http.StatusCreated, userPosts)
 			}
 			return c.JSON(http.StatusInternalServerError, "no user id found in session")
 		}
 
-
-		rows, err := database.Connection().Query( oneQuery, id )
+		rows, err := database.DB.Query(oneQuery, id)
 		for rows.Next() {
 			err = rows.Scan(
 				&userPost.Id,
@@ -103,11 +112,15 @@ func Get() echo.HandlerFunc {
 				&userPost.Content,
 				&userPost.Date_created,
 				&userPost.Date_updated,
-			 	&userPost.Ups )
-			if err != nil { return err }
+				&userPost.Ups,
+				&userPost.Alias,
+				&userPost.Avatar)
+			if err != nil {
+				return err
+			}
 		}
 
-		return c.JSON( http.StatusCreated, userPost )
+		return c.JSON(http.StatusCreated, userPost)
 	}
 
 }
