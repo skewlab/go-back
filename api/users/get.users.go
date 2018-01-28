@@ -20,10 +20,10 @@ import (
 type H map[string]interface{}
 
 type User struct {
-	Id          string         `json:"id"`
-	Email       string         `json:"email"`
-	Alias       sql.NullString `json:"alias"`
-	Birthdate   sql.NullString `json:"birthdate"`
+	Id    string         `json:"id"`
+	Email string         `json:"email"`
+	Alias sql.NullString `json:"alias"`
+	//Birthdate   sql.NullString `json:"birthdate"`
 	Avatar      sql.NullString `json:"avatar"`
 	Description sql.NullString `json:"description"`
 	Website     sql.NullString `json:"website"`
@@ -34,7 +34,7 @@ func Get() echo.HandlerFunc {
 
 	const (
 		query string = `
-			SELECT id, email, alias, birthdate, avatar, description, website, phonenumber
+			SELECT id, email, alias, avatar, description, website, phonenumber
 			FROM Users
 			WHERE id = $1
 		`
@@ -60,7 +60,7 @@ func Get() echo.HandlerFunc {
 				&user.Id,
 				&user.Email,
 				&user.Alias,
-				&user.Birthdate,
+				//&user.Birthdate,
 				&user.Avatar,
 				&user.Description,
 				&user.Website,
