@@ -90,6 +90,12 @@ CREATE TABLE UserConnections (
 	Accepted boolean NOT NULL
 );
 
+CREATE TABLE connectionrequests(
+	requestinguser uuid,
+	respondinguser uuid,
+	accepted boolean
+);
+
 --
 -- Comments:
 -- A reaches out to B. If b Accepts the accepted field is set to true.
@@ -98,7 +104,7 @@ CREATE TABLE UserConnections (
 -- --------------------------------------------------------
 
 --
--- Table structure for table contacts
+-- Table structure for table ups
 --
 
 CREATE TABLE Ups (
