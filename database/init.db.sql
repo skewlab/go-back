@@ -19,7 +19,7 @@ Values(
 	'simon@garfunkel.com',
 	crypt( 'secret-simon', gen_salt( 'bf', 8 ) ),
 	'Simon Garfunkel',
-	'https://cdn.pixabay.com/photo/2015/09/08/17/35/man-930397_960_720.jpg',
+	'http://www.fakepersongenerator.com/Face/male/male20161085952333985.jpg',
 	'I like to play music.',
 	'www.google.com',
 	'0701928374'
@@ -32,7 +32,7 @@ Values(
 	'pussy@pet.com',
 	crypt( 'secret-pussy', gen_salt( 'bf', 8 ) ),
 	'Pussy Pet',
-	'https://cdn.pixabay.com/photo/2016/06/22/21/18/cat-1474092_960_720.jpg',
+	'http://www.fakepersongenerator.com/Face/male/male1085432314820.jpg',
 	'I love pussy pussy.',
 	'www.google.com',
 	'0701928374'
@@ -45,7 +45,7 @@ Values(
 	'joe@man.org',
 	crypt( 'secret-joe', gen_salt( 'bf', 8 ) ),
 	'Joe Man',
-	'https://cdn.pixabay.com/photo/2016/02/18/22/16/smile-1208203_960_720.jpg',
+	'http://www.fakepersongenerator.com/Face/male/male20111086094401184.jpg',
 	'Hi Im Joe. Who are you? I like fishing and conversations about men.',
 	'www.google.com',
 	'0701928374'
@@ -58,7 +58,7 @@ Values(
 	'leila_skypetalker@galaxies.net',
 	crypt( 'secret-leila', gen_salt( 'bf', 8 ) ),
 	'Leila Skypetalker',
-	'https://cdn.pixabay.com/photo/2015/04/20/13/32/woman-731377_960_720.jpg',
+	'http://www.fakepersongenerator.com/Face/female/female102241340711.jpg',
 	'I didn´t do it with my brother or with the big fat slimy hot dog looking fellow.',
 	'http://galaxies.net/',
 	'0701928374'
@@ -71,7 +71,7 @@ Values(
 	'gerly@gerls.org',
 	crypt( 'secret-gerly', gen_salt( 'bf', 8 ) ),
 	'Gerly Gerl',
-	'https://cdn.pixabay.com/photo/2017/01/23/19/40/beautiful-girl-2003647_960_720.jpg',
+	'http://www.fakepersongenerator.com/Face/female/female20161025522236115.jpg',
 	'I like to read books and lie down in the leaves and get my knitted sweater dirty.',
 	'',
 	'0701928374'
@@ -84,7 +84,7 @@ Values(
 	'bearbones@forestsandthat.com',
 	crypt( 'secret-bear', gen_salt( 'bf', 8 ) ),
 	'Bear Bones',
-	'https://cdn.pixabay.com/photo/2017/09/21/09/25/teddy-bear-2771252_960_720.jpg',
+	'http://www.fakepersongenerator.com/Face/male/male20151083626635132.jpg',
 	'I don´t have any firends... Please hug me.',
 	'http://hello.world',
 	'0701928374'
