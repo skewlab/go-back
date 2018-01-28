@@ -11,10 +11,9 @@ Up something.
 package ups
 
 import (
-	"net/http"
-
-	"../../database"
 	"github.com/labstack/echo"
+	"net/http"
+	"../../database"
 )
 
 func Post() echo.HandlerFunc {
@@ -31,16 +30,14 @@ func Post() echo.HandlerFunc {
 
 	var up Up
 
-	return func(c echo.Context) error {
-		c.Bind(&up)
+	return func( c echo.Context ) error {
+		c.Bind( &up )
 
-		_, err := database.DB.Query(query, up.Userid, up.Postid)
+		_, err := database.Connection().Query( query, up.Userid, up.Postid )
 
-		if err != nil {
-			return err
-		}
+		if err != nil { return err }
 
-		return c.JSON(http.StatusCreated, H{"message": "Up added"})
+		return c.JSON( http.StatusCreated, H{ "message":"Up added" } )
 
 	}
 

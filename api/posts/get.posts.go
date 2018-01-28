@@ -8,7 +8,6 @@ Get article with specified id
 package posts
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -17,29 +16,17 @@ import (
 	"github.com/labstack/echo"
 )
 
-type Marshaler interface {
-	MarshalJSON() ([]byte, error)
-}
-
-type JSONTime time.Time
-
-func (t JSONTime) MarshalJSON() ([]byte, error) {
-	//do your serializing here
-	stamp := fmt.Sprintf("\"%s\"", time.Time(t).Format("2006 Jan _2 15:04:05"))
-	return []byte(stamp), nil
-}
-
 type H map[string]interface{}
 
 type UserPost struct {
-	Id           int      `json:"id"`
-	Userid       string   `json:"userid"`
-	Content      string   `json:"content"`
-	Date_created JSONTime `json:"date_created"`
-	Date_updated JSONTime `json:"date_updated"`
-	Ups          int      `json:"ups""`
-	Alias        string   `json:"alias""`
-	Avatar       string   `json:"avatar""`
+	Id           int       `json:"id"`
+	Userid       string    `json:"userid"`
+	Content      string    `json:"content"`
+	Date_created time.Time `json:"date_created"`
+	Date_updated time.Time `json:"date_updated"`
+	Ups          int       `json:"ups""`
+	Alias        string    `json:"alias""`
+	Avatar       string    `json:"avatar""`
 }
 
 func Get() echo.HandlerFunc {
@@ -95,7 +82,7 @@ func Get() echo.HandlerFunc {
 			if value, ok := session.Values["userId"].(string); ok {
 				loggedInUser := value
 
-				rows, err := database.DB.Query(allQuery, loggedInUser)
+				rows, err := database.Connection().Query(allQuery, loggedInUser)
 				for rows.Next() {
 					err = rows.Scan(
 						&userPost.Id,
@@ -117,7 +104,7 @@ func Get() echo.HandlerFunc {
 			return c.JSON(http.StatusInternalServerError, "no user id found in session")
 		}
 
-		rows, err := database.DB.Query(oneQuery, id)
+		rows, err := database.Connection().Query(oneQuery, id)
 		for rows.Next() {
 			err = rows.Scan(
 				&userPost.Id,

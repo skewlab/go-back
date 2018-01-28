@@ -11,7 +11,6 @@ package ups
 
 import (
 	"net/http"
-
 	"../../database"
 	"github.com/labstack/echo"
 )
@@ -20,7 +19,7 @@ type H map[string]interface{}
 
 type Up struct {
 	Userid string `json:"userid"`
-	Postid int    `json:"postid"`
+	Postid int 		`json:"postid"`
 }
 
 func Get() echo.HandlerFunc {
@@ -35,20 +34,19 @@ func Get() echo.HandlerFunc {
 		`
 	)
 
-	return func(c echo.Context) error {
 
-		id := c.Param("id")
+	return func( c echo.Context ) error {
 
-		rows, err := database.DB.Query(query, id)
+		id := c.Param( "id" )
+
+		rows, err := database.Connection().Query( query, id )
 		for rows.Next() {
-			err = rows.Scan(&up.Userid, &up.Postid)
-			if err != nil {
-				return err
-			}
-			upArray = append(upArray, up)
+			err = rows.Scan( &up.Userid, &up.Postid )
+			if err != nil { return err }
+			upArray = append( upArray, up )
 		}
 
-		return c.JSON(http.StatusCreated, upArray)
+		return c.JSON( http.StatusCreated, upArray )
 	}
 
 }
