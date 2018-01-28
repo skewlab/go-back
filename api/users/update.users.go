@@ -12,19 +12,20 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-	"github.com/labstack/echo"
+
 	"../../database"
+	"github.com/labstack/echo"
 )
 
 type UserProfile struct {
-	Id 					string		`json:"id"`
-	Email 			string		`json:"email"`
-	Alias 			string		`json:"alias"`
-	Avatar 			string		`json:"avatar"`
-	Birthdate 	string		`json:"birthdate"`
-	Description string		`json:"description"`
-	Website 		string		`json:"website"`
-	Phonenumber string		`json:"phonenumber"`
+	Id          string `json:"id"`
+	Email       string `json:"email"`
+	Alias       string `json:"alias"`
+	Avatar      string `json:"avatar"`
+	Birthdate   string `json:"birthdate"`
+	Description string `json:"description"`
+	Website     string `json:"website"`
+	Phonenumber string `json:"phonenumber"`
 }
 
 /*
@@ -56,17 +57,19 @@ func Update() echo.HandlerFunc {
 
 	var userProfile UserProfile
 
-	return func( c echo.Context ) error {
+	return func(c echo.Context) error {
 
-		c.Bind( &userProfile )
+		c.Bind(&userProfile)
 
-		birthdate, err := time.Parse( userProfile.Birthdate, userProfile.Birthdate )
+		birthdate, err := time.Parse(userProfile.Birthdate, userProfile.Birthdate)
 
-		if err != nil { return err }
+		if err != nil {
+			return err
+		}
 
-		fmt.Printf( "%v", userProfile )
+		fmt.Printf("%v", userProfile)
 
-		_, updateErr := database.Connection().Query(
+		_, updateErr := database.DB.Query(
 			updateQuery,
 			userProfile.Email,
 			userProfile.Alias,
@@ -75,11 +78,13 @@ func Update() echo.HandlerFunc {
 			userProfile.Description,
 			userProfile.Website,
 			userProfile.Phonenumber,
-			userProfile.Id )
+			userProfile.Id)
 
-		if updateErr != nil { return updateErr }
+		if updateErr != nil {
+			return updateErr
+		}
 
-		_, insertErr := database.Connection().Query(
+		_, insertErr := database.DB.Query(
 			insertQuery,
 			userProfile.Email,
 			userProfile.Alias,
@@ -88,11 +93,13 @@ func Update() echo.HandlerFunc {
 			userProfile.Description,
 			userProfile.Website,
 			userProfile.Phonenumber,
-			userProfile.Id )
+			userProfile.Id)
 
-		if insertErr != nil { return insertErr }
+		if insertErr != nil {
+			return insertErr
+		}
 
-		return c.JSON( http.StatusCreated, H{ "message": "User updated" } )
+		return c.JSON(http.StatusCreated, H{"message": "User updated"})
 	}
 
 }

@@ -47,12 +47,10 @@ func Post() echo.HandlerFunc {
 
 	return func(c echo.Context) error {
 		c.Bind(&searchQuery)
-		fmt.Print("i search endpoint!")
-		fmt.Print(searchQuery.Searchstring)
 		var users []User
 		session := globalSessions.GetSession(c)
 		if _, ok := session.Values["userId"].(string); ok {
-			rows, err := database.Connection().Query(query, "%"+searchQuery.Searchstring+"%")
+			rows, err := database.DB.Query(query, "%"+searchQuery.Searchstring+"%")
 			for rows.Next() {
 				err = rows.Scan(
 					&user.Id,
@@ -64,7 +62,6 @@ func Post() echo.HandlerFunc {
 					&user.Website,
 					&user.Phonenumber)
 				if err != nil {
-					fmt.Print("i forLOOP ERRORORORORO")
 					return err
 				}
 				users = append(users, user)
