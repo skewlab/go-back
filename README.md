@@ -14,11 +14,11 @@ A general purpose backend in GO
   "host"     : "localhost",
   "port"     : 5432,
   "user"     : "<username>",
-  "password" : "<passeord>",
+  "password" : "<password>",
   "dbname"   : "<dbname>"
 }
 ```
- 
+
 ### Server
 1. Duplicate example.config.json
 2. Rename the copy to config.json
@@ -26,6 +26,28 @@ A general purpose backend in GO
 4. Change the fields to match your setup:
 ```JSON
 {
-  "port" : ":0000"
+  "port" : ":0000",
+	"static": "/path/to/static/folder",
+	"devPort": ":0001"
+}
+```
+The devPort setting is the port on which front end is developed.
+
+### Contact
+If you are using the contact module, you will need to configure contact.config.json.
+1. Duplicate example.contact.config.json
+2. Rename the copy to contact.config.json
+3. Change <gmail> to your gmail address (This would preferrably be another than your regular)
+4. Change <password> to the password for the given gmail account.
+5. Change <forward email> to the email you wish to send the contents of the form to.
+```
+{
+  "SMTP": {
+    "host": "smtp.gmail.com",
+    "port": ":587"
+  },
+  "gmail": "<gmail>",
+  "password": "<password>",
+  "forward": "<forward email>"
 }
 ```

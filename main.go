@@ -1,34 +1,47 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"encoding/json"
-	"./api"
-	"./util"
+  "encoding/json"
+
+  "./api"
+  "./util"
+  "github.com/labstack/echo"
+  "github.com/labstack/echo/middleware"
 )
 
 /*
-	Config struct
-	Map ./config.json to this struct.
+  Config struct
+  Map ./config.json to this struct.
 */
 type Config struct {
-	Port string
+  Port            string
+  Static          string
+  FrontEndDevPort string
 }
 
 func main() {
 
-	var config Config
-	configFile := util.ReadFile( "config.json" )
-	json.Unmarshal( []byte( configFile ), &config )
+  var config Config
+  configFile := util.ReadFile("config.json")
+  json.Unmarshal([]byte(configFile), &config)
+  e := echo.New()
 
-	fmt.Printf( "\n > Starting server on localhost%v\n", config.Port )
+  // NOTE: Allow CORS for development
+  // This should be carefully set in production mode
+  //e.Use(middleware.Logger())
+  e.Use(middleware.Recover())
+  e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+    AllowOrigins:     []string{"localhost", "http://localhost" + config.FrontEndDevPort},
+    AllowMethods:     []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
+    AllowCredentials: true,
+  }))
+  ///////////////
 
-	fs := http.FileServer( http.Dir( "static" ) )
-	http.Handle( "/", fs )
+  // Static routes for main page and manage page
+  e.Use(middleware.Static(config.Static))
 
-	api.Module()
+  api.Module(e)
 
-	http.ListenAndServe( config.Port, nil )
+  e.Start(config.Port)
 
 }

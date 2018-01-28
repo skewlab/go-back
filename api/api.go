@@ -9,35 +9,91 @@ Include all the api endpoints.
 package api
 
 import (
-	"fmt"
-	"net/http"
 	"./article"
-	"./user"
+	"./authenticate"
+	"./posts"
+	"./search"
+	"./signin"
+	"./signout"
+	"./ups"
+	"./user-connections"
+	"./users"
+	"./websockets"
+	"github.com/labstack/echo"
 )
 
-func Module() {
+func Module(e *echo.Echo) {
 
-	/* Test */
-	http.HandleFunc( "/api/test", test )
+	//
+	// Users
+	//
+	e.GET("/api/users/:id", users.Get())
+	e.POST("/api/users", users.Create())
+	e.PUT("/api/users", users.Update())
+	e.DELETE("/api/users/:id", users.Delete())
 
-	/* Article */
-	http.HandleFunc( "/api/article/create", article.Create )	// Create
-	http.HandleFunc( "/api/article/get", article.GetAll )			// Get all articles
-	// TODO: Update article
-	// TODO: Remove article
+	//
+	// User connection
+	//
 
-	/* User */
-	http.HandleFunc( "/api/user/add", user.Add ) 							// Add user
-	// TODO: Update user password
-	// TODO: Remove user
+	// NOTE: /:id will later be removed
+	//			 All connections should be returned
+	//			 /:id is now a replacement for logged in user id until sessions works.
+	e.GET("/api/user-connections/:id", userConnections.Get())
+	e.POST("/api/user-connections", userConnections.Connect())
+	e.PUT("/api/user-connections", userConnections.Accept())
 
-	/* Page */
-	// TODO: Get page content, (articles)
+	// NOTE: Change this to DELETE after sessions are working,
+	//			 change /remove to /:id
+	e.POST("/api/user-connections/remove", userConnections.Disconnect())
+	e.GET("/api/my-contacts", userConnections.MyContacts())
 
-	/* Files */
+	//
+	// Articles
+	//
+	e.GET("/api/article/:id", article.Get())
+	e.POST("/api/article", article.Post())
+	e.PUT("/api/article", article.Put())
+	e.DELETE("/api/article/:id", article.Delete())
 
-}
+	//
+	// Posts
+	//
+	e.GET("/api/posts/:id", posts.Get())
+	e.POST("/api/posts", posts.Post())
+	e.PUT("/api/posts", posts.Put())
+	e.DELETE("/api/posts/:id", posts.Delete())
 
-func test( w http.ResponseWriter, r *http.Request ) {
-	fmt.Println( "Test works" )
+	//
+	// Signin
+	//
+	e.POST("/api/signin", signin.Post())
+
+	//
+	// Sign out
+	//
+	e.POST("/api/signout", signout.Post())
+
+	//
+	// Authenticate
+	//
+	e.GET("/api/auth", auth.Auth())
+
+	//
+	// Websockets
+	//
+	e.GET("/websocket", websock.Connect)
+
+	//
+	// Ups
+	//
+	e.GET("/api/ups/user/:id", ups.Get())  // Get a users ups
+	e.POST("/api/ups", ups.Post())         // Get a users ups
+	e.DELETE("/api/ups/:id", ups.Delete()) // Get a posts ups
+
+	//
+	// Search
+	//
+	e.POST("/api/search", search.Post()) // Search for a alias
+
 }
