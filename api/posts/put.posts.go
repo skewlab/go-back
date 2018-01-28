@@ -11,18 +11,16 @@ Update article in the database.
 package posts
 
 import (
-	"net/http"
 	"time"
-
+	"net/http"
 	"../../database"
-
 	"github.com/labstack/echo"
 )
 
 type UpdatePost struct {
-	Id           int       `json:"id"`
-	Content      string    `json:"content"`
-	Date_updated time.Time `json:"date_updated"`
+	Id						int				`json:"id"`
+	Content 			string 		`json:"content"`
+	Date_updated 	time.Time `json:"date_updated"`
 }
 
 func Put() echo.HandlerFunc {
@@ -42,21 +40,23 @@ func Put() echo.HandlerFunc {
 			WHERE id = $3` // TODO: add `AND userid = $4`
 	)
 
-	return func(c echo.Context) error {
-		c.Bind(&updatePost)
+	return func( c echo.Context ) error {
+		c.Bind( &updatePost )
 
 		// Run update query
-		_, updateErr := database.DB.Query(
+		_, updateErr := database.Connection().Query(
 			updateQuery,
 			updatePost.Content,
 			now,
-			updatePost.Id) //, TODO: Add logged in user here)
+			updatePost.Id ) //, TODO: Add logged in user here)
 
 		if updateErr != nil {
 			return updateErr
 		}
 
-		return c.JSON(http.StatusCreated, H{"message": "Post updated"})
+		return c.JSON( http.StatusCreated, H{ "message": "Post updated" } )
 	}
+
+
 
 }

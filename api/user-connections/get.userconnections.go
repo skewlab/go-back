@@ -33,11 +33,11 @@ func Get() echo.HandlerFunc {
 	var userConnection UserConnection
 	var userConnections []UserConnection
 
-	return func(c echo.Context) error {
+	return func( c echo.Context ) error {
 
-		loggedInUser := c.Param("id")
+		loggedInUser := c.Param( "id" )
 
-		rows, err := database.DB.Query(query, loggedInUser)
+		rows, err := database.Connection().Query( query, loggedInUser )
 
 		for rows.Next() {
 
@@ -46,7 +46,7 @@ func Get() echo.HandlerFunc {
 				&userConnection.RespondingUser,
 				&userConnection.Accepted)
 
-			userConnections = append(userConnections, userConnection)
+			userConnections = append( userConnections, userConnection )
 
 			if err != nil {
 				return err
@@ -54,7 +54,7 @@ func Get() echo.HandlerFunc {
 
 		}
 
-		return c.JSON(http.StatusCreated, userConnections)
+		return c.JSON( http.StatusCreated, userConnections )
 
 	}
 

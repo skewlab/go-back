@@ -11,7 +11,6 @@ package api
 import (
 	"./article"
 	"./authenticate"
-	"./feed"
 	"./posts"
 	"./search"
 	"./signin"
@@ -64,11 +63,6 @@ func Module(e *echo.Echo) {
 	e.POST("/api/posts", posts.Post())
 	e.PUT("/api/posts", posts.Put())
 	e.DELETE("/api/posts/:id", posts.Delete())
-
-	//
-	// Posts
-	//
-	e.GET("/api/feed/:id", feed.Get())
 
 	//
 	// Signin

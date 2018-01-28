@@ -9,9 +9,8 @@ package userConnections
 
 import (
 	"net/http"
-
-	"../../database"
 	"github.com/labstack/echo"
+	"../../database"
 )
 
 type H map[string]interface{}
@@ -36,20 +35,18 @@ func Accept() echo.HandlerFunc {
 
 	var connectionRequest ConnectionRequest
 
-	return func(c echo.Context) error {
+	return func( c echo.Context ) error {
 
-		c.Bind(&connectionRequest)
+		c.Bind( &connectionRequest )
 
-		_, err := database.DB.Query(
+		_, err := database.Connection().Query(
 			query,
 			connectionRequest.NewConnection,
-			connectionRequest.LoggedInUser)
+			connectionRequest.LoggedInUser )
 
-		if err != nil {
-			return err
-		}
+		if err != nil { return err }
 
-		return c.JSON(http.StatusCreated, H{"message": "User connection requested"})
+		return c.JSON( http.StatusCreated, H{ "message": "User connection requested" } )
 
 	}
 

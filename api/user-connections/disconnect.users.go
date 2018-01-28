@@ -9,9 +9,8 @@ package userConnections
 
 import (
 	"net/http"
-
-	"../../database"
 	"github.com/labstack/echo"
+	"../../database"
 )
 
 /*
@@ -32,25 +31,23 @@ func Disconnect() echo.HandlerFunc {
 
 	var connectionRequest ConnectionRequest
 
-	return func(c echo.Context) error {
+	return func( c echo.Context ) error {
 
-		c.Bind(&connectionRequest)
+		c.Bind( &connectionRequest )
 
 		// contactId := c.Param( "id" )
 		// NOTE: Uncomment line above and use contactId instead of
 		// connectionRequest.NewConnection when sessions are workning.
 
-		_, err := database.DB.Query(
+		_, err := database.Connection().Query(
 			query,
 			connectionRequest.LoggedInUser,
-			connectionRequest.NewConnection)
-		//contactId )
+			connectionRequest.NewConnection )
+			//contactId )
 
-		if err != nil {
-			return err
-		}
+		if err != nil { return err }
 
-		return c.JSON(http.StatusCreated, H{"message": "User connection removed"})
+		return c.JSON( http.StatusCreated, H{ "message": "User connection removed" } )
 
 	}
 
