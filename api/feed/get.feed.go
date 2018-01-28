@@ -1,5 +1,5 @@
 /*
-Author: Filip Johansson
+Author: Jonas Johansson
 
 Description:
 Get article with specified id
