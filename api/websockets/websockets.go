@@ -24,7 +24,7 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-func waitForNotification(l *pq.Listener) []byte {
+func waitForNotification(l *pq.Listener) string {
 	for {
 		select {
 		case n := <-l.Notify:
@@ -34,16 +34,16 @@ func waitForNotification(l *pq.Listener) []byte {
 			err := json.Indent(&prettyJSON, []byte(n.Extra), "", "\t")
 			if err != nil {
 				fmt.Println("Error processing JSON: ", err)
-				return prettyJSON.Bytes()
+				return string(prettyJSON.Bytes())
 			}
 			fmt.Println(string(prettyJSON.Bytes()))
-			return prettyJSON.Bytes()
+			return string(prettyJSON.Bytes())
 		case <-time.After(90 * time.Second):
 			fmt.Println("Received no events for 90 seconds, checking connection")
 			go func() {
 				l.Ping()
 			}()
-
+			return "checking connection"
 		}
 	}
 }
@@ -80,8 +80,8 @@ func Connect(c echo.Context) error {
 
 		for {
 			data := waitForNotification(listener)
-			// Write
 			fmt.Println(data)
+			// Write
 			err := websocket.Message.Send(ws, data)
 			if err != nil {
 				c.Logger().Error(err)
