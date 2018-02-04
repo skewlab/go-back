@@ -30,7 +30,7 @@ func waitForNotification(l *pq.Listener) []byte {
 	for {
 		select {
 		case n := <-l.Notify:
-			fmt.Println("Received data from channel [", n.Channel, "] :")
+			//fmt.Println("Received data from channel [", n.Channel, "] :")
 			// Prepare notification payload for pretty print
 			var prettyJSON bytes.Buffer
 			err := json.Indent(&prettyJSON, []byte(n.Extra), "", "\t")
@@ -123,26 +123,19 @@ func Connect(c echo.Context) error {
 						&userPost.Alias,
 						&userPost.Avatar)
 					if err != nil {
+						fmt.Println("query-error")
 						fmt.Println(err)
 					}
 				}
-
-				fmt.Println("DATA:")
-				println("ID")
-				println(string(id))
-				println("DATA")
-				println(string(data))
-				fmt.Println(string(id))
-				fmt.Println(userPost)
 
 				jsonUserPost, err := json.Marshal(userPost)
 				// Write
 				err = websocket.Message.Send(ws, string(jsonUserPost))
 				if err != nil {
+					fmt.Println("websocket send error")
 					c.Logger().Error(err)
 				}
 			}
-
 			// Read
 			msg := ""
 			err = websocket.Message.Receive(ws, &msg)
@@ -150,9 +143,7 @@ func Connect(c echo.Context) error {
 				c.Logger().Error(err)
 			}
 			fmt.Printf("%s\n", msg)
-
 		}
-
 	}).ServeHTTP(c.Response(), c.Request())
 
 	return nil
