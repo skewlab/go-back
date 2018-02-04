@@ -48,7 +48,8 @@ func Get() echo.HandlerFunc {
 				FROM UserConnections
 				WHERE RespondingUser = $1
 				AND Accepted = true
-			)) as c ON c.contacts = Users.id)`
+			)) as c ON c.contacts = Users.id)
+			ORDER BY posts.date_updated DESC`
 	)
 
 	return func(c echo.Context) error {

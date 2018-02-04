@@ -17,14 +17,16 @@ import (
 	"fmt"
 	"time"
 
-	"../../util"
-
+	"../../database"
+	"../posts"
 	"github.com/labstack/echo"
+
+	"../../util"
 	"github.com/lib/pq"
 	"golang.org/x/net/websocket"
 )
 
-func waitForNotification(l *pq.Listener) string {
+func waitForNotification(l *pq.Listener) []byte {
 	for {
 		select {
 		case n := <-l.Notify:
@@ -34,16 +36,15 @@ func waitForNotification(l *pq.Listener) string {
 			err := json.Indent(&prettyJSON, []byte(n.Extra), "", "\t")
 			if err != nil {
 				fmt.Println("Error processing JSON: ", err)
-				return string(prettyJSON.Bytes())
+				return prettyJSON.Bytes()
 			}
 			fmt.Println(string(prettyJSON.Bytes()))
-			return string(prettyJSON.Bytes())
+			return prettyJSON.Bytes()
 		case <-time.After(90 * time.Second):
 			fmt.Println("Received no events for 90 seconds, checking connection")
 			go func() {
 				l.Ping()
 			}()
-			return "checking connection"
 		}
 	}
 }
@@ -55,6 +56,8 @@ type DBConfig struct {
 	Password string
 	Dbname   string
 }
+
+type JSONTime time.Time
 
 func Connect(c echo.Context) error {
 	var DBconfig DBConfig
@@ -79,12 +82,65 @@ func Connect(c echo.Context) error {
 		fmt.Println("Start monitoring PostgreSQL...")
 
 		for {
-			data := waitForNotification(listener)
-			fmt.Println(data)
-			// Write
-			err := websocket.Message.Send(ws, data)
-			if err != nil {
-				c.Logger().Error(err)
+			notification := waitForNotification(listener)
+
+			var raw map[string]interface{}
+			json.Unmarshal(notification, &raw)
+
+			if raw["table"] == "posts" {
+				var userPost posts.UserPost
+				data, _ := json.Marshal(raw["data"])
+
+				json.Unmarshal(data, &raw)
+				id, _ := json.Marshal(raw["id"])
+
+				const (
+					oneQuery string = `
+					SELECT posts.*, coalesce( up_table.up_count, 0 ) ups, users_table.alias, users_table.avatar
+					FROM posts
+					LEFT JOIN (
+						SELECT postid, count(*) up_count
+						FROM ups
+						GROUP BY postid
+					) up_table ON up_table.postid = posts.id
+					LEFT JOIN ( 
+						SELECT users.id, users.alias, users.avatar 
+						FROM users 
+					) users_table ON users_table.id = posts.userid 
+					WHERE posts.id = $1;`
+				)
+
+				rows, err := database.DB.Query(oneQuery, string(id))
+				fmt.Println(rows)
+				for rows.Next() {
+					err = rows.Scan(
+						&userPost.Id,
+						&userPost.Userid,
+						&userPost.Content,
+						&userPost.Date_created,
+						&userPost.Date_updated,
+						&userPost.Ups,
+						&userPost.Alias,
+						&userPost.Avatar)
+					if err != nil {
+						fmt.Println(err)
+					}
+				}
+
+				fmt.Println("DATA:")
+				println("ID")
+				println(string(id))
+				println("DATA")
+				println(string(data))
+				fmt.Println(string(id))
+				fmt.Println(userPost)
+
+				jsonUserPost, err := json.Marshal(userPost)
+				// Write
+				err = websocket.Message.Send(ws, string(jsonUserPost))
+				if err != nil {
+					c.Logger().Error(err)
+				}
 			}
 
 			// Read

@@ -66,7 +66,7 @@ func Module(e *echo.Echo) {
 	e.DELETE("/api/posts/:id", posts.Delete())
 
 	//
-	// Posts
+	// Feed
 	//
 	e.GET("/api/feed/:id", feed.Get())
 
