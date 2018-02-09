@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"./database"
 
@@ -23,7 +22,6 @@ type Config struct {
 }
 
 func main() {
-
 	var config Config
 	configFile := util.ReadFile("config.json")
 	json.Unmarshal([]byte(configFile), &config)
@@ -31,15 +29,13 @@ func main() {
 
 	// Init Database connection
 	database.DB = database.Connection()
-	fmt.Print("db done")
-	fmt.Print(database.DB)
 
 	// NOTE: Allow CORS for development
 	// This should be carefully set in production mode
 	//e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins:     []string{"localhost", "http://localhost" + config.FrontEndDevPort},
+		AllowOrigins:     []string{"http://192.168.1.4" + config.FrontEndDevPort, "http://localhost" + config.FrontEndDevPort},
 		AllowMethods:     []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
 		AllowCredentials: true,
 	}))
@@ -49,7 +45,5 @@ func main() {
 	e.Use(middleware.Static(config.Static))
 
 	api.Module(e)
-
 	e.Start(config.Port)
-
 }
